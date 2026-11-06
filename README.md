@@ -31,6 +31,8 @@ De titel blijft verborgen tot je de songtekst toont, zodat het ook een raadspel 
 
 Sneltoetsen: **spatie** = afspelen, **Enter** = songtekst tonen of verbergen, **pijltjes** = vorige of volgende.
 
+In het scorebord krijgt elk team automatisch een eigen kleur (acht kleuren, daarna begint het opnieuw). Met de knop 🎨 bij een team kies je zelf een andere kleur. Teams en scores blijven bewaard in je browser.
+
 Op het beginscherm kies je hoeveel seconden er vóór de stop wordt gespeeld (6 tot 25) en hoeveel regels er moeten worden afgemaakt (1 tot 3).
 
 ## Schermen
@@ -102,5 +104,9 @@ Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 - Inloggen via Spotify met PKCE, nummers uit de Spotify Web API, afspelen met de Spotify Web Playback SDK.
 - Het stopmoment komt uit de tijdstempels van de tekst: de app kiest een plek waar de zang direct daarna verdergaat. Regels die vaker in het liedje voorkomen (het refrein) krijgen voorrang.
 - De schermafbeeldingen zijn gemaakt met nagebootste antwoorden van Spotify en LRCLIB en verzonnen demodata.
+
+## Licentie
+
+De code is beschikbaar onder de [MIT-licentie](LICENSE). Het ingebouwde lettertype valt onder zijn eigen licentie (SIL Open Font License 1.1). Voor Spotify en LRCLIB gelden hun eigen gebruiksvoorwaarden.
 
 Deze app is niet gelieerd aan Spotify of LRCLIB. Spotify is een handelsmerk van Spotify AB.
