@@ -1,5 +1,7 @@
 # 🎤 Finish the lyrics
 
+### ▶ [Speel het spel direct: mmulder82.github.io/finish-the-lyrics](https://mmulder82.github.io/finish-the-lyrics/)
+
 Een muziekspel voor een groepje vriendinnen, een feestje of een clubavond. Het liedje uit jullie Spotify-playlist speelt, **stopt vanzelf midden in de tekst** en een deelnemer maakt de zin af. Daarna drukt de spelleider op één knop en verschijnt de tekst die gezongen had moeten worden.
 
 Je geeft alleen een Spotify-playlist op. De app zoekt zelf de tijdgesynchroniseerde teksten erbij en kiest per liedje een stopmoment.
