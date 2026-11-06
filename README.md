@@ -56,15 +56,27 @@ Naast afspelen in de browser (laptop) kun je op het beginscherm bij **Afspelen o
 2. Kies in het spel **📡 Een Spotify-apparaat** en druk op **🔄 Vernieuwen**.
 3. Kies het apparaat in de lijst en speel zoals gewoonlijk.
 
+Reageert het apparaat niet, dan probeert de app het eerst wakker te maken en nogmaals af te spelen. Lukt het dan nog niet, dan staat in de melding de reden die Spotify geeft (bijvoorbeeld `NO_ACTIVE_DEVICE`: speel dan even iets af in de Spotify-app op dat apparaat).
+
 Het volume stel je in op het apparaat zelf. Op een iPhone of iPad staat deze modus automatisch aan, want de Spotify-speler in de browser werkt daar niet.
 
 **Apple TV:** er is geen Spotify-speler voor Apple TV die deze pagina kan bedienen, maar de Spotify-app op de Apple TV verschijnt wel als apparaat in de lijst. Je speelt dan het geluid via de Apple TV en bedient het spel vanaf een laptop of telefoon. Wil je ook het scherm op de tv, spiegel dan het scherm van je laptop, iPhone of iPad via AirPlay.
 
 **Let op:** in deze modus pauzeert de app met een nauwkeurigheid van ongeveer een halve seconde, iets minder precies dan in de browser. Deze modus is getest met een nagebootst Spotify-apparaat, nog niet met echte apparaten.
 
-### Snelkoppeling op het beginscherm
+### Installeren als app
 
-Op een telefoon of tablet kun je de pagina als snelkoppeling toevoegen (Deel → Zet op beginscherm). Je krijgt dan het microfoon-icoon. De pagina opent daarna gewoon in je browser en niet als losstaande app, omdat inloggen met Spotify op een iPhone niet goed werkt vanuit zo'n losstaande app.
+- **Chrome of Edge (computer of Android):** klik onderaan de pagina op **📲 Installeer als app** of op het installeer-icoontje in de adresbalk. De app opent daarna in een eigen venster, met het microfoon-icoon.
+- **iPhone of iPad:** Deel → Zet op beginscherm geeft een snelkoppeling met het icoon. Die opent gewoon in Safari en niet als losstaande app, omdat inloggen met Spotify vanuit zo'n losstaande app op iOS niet goed werkt.
+
+### Spotify koppelen zonder dat spelers iets hoeven in te stellen
+
+Spotify laat een app alleen toe als iemand eenmalig een Spotify-app heeft aangemaakt (zie *Installeren*). Spelers hoeven dat niet zelf te doen. Als beheerder maak je die app één keer en daarna kunnen anderen op twee manieren zonder Client ID beginnen:
+
+- **Vast in het bestand:** zet je Client ID bovenin `index.html` bij `DEFAULT_CLIENT_ID`. Het koppelscherm toont dan alleen nog de knop **Inloggen met Spotify**.
+- **Via een link:** stuur `https://<jouw-gebruikersnaam>.github.io/finish-the-lyrics/?cid=JOUW_CLIENT_ID`. De pagina onthoudt het Client ID en laat het uit de adresbalk verdwijnen.
+
+Een gebruiker moet nog steeds inloggen met een eigen Premium-account. Daar zit geen omweg voor: Spotify eist toestemming van elke gebruiker. Daarnaast staat een Spotify-app in de ontwikkelaarsmodus maximaal vijf gebruikers toe, en elk account moet door de beheerder worden toegevoegd onder **User management** in het dashboard. Voor onbeperkt gebruik door anderen heeft Spotify een aparte goedkeuring nodig (extended quota). Naar de voorwaarden daarvan heb ik niet kunnen vinden wat officieel geldt.
 
 ## Schermen
 
@@ -84,7 +96,7 @@ Je hebt twee dingen nodig: een plek waar de pagina staat (GitHub Pages) en een g
 ### 1. Zet de pagina op GitHub Pages
 
 1. Maak op GitHub een nieuwe repository, bijvoorbeeld `finish-the-lyrics`.
-2. Upload `index.html`, `manifest.webmanifest` en de drie iconen (`icon-180.png`, `icon-192.png`, `icon-512.png`).
+2. Upload `index.html`, `sw.js`, `manifest.webmanifest` en de drie iconen (`icon-180.png`, `icon-192.png`, `icon-512.png`).
 3. Ga naar **Settings → Pages**, kies **Deploy from a branch**, branch `main` en map `/ (root)`.
 4. Na een minuut staat de pagina op `https://<jouw-gebruikersnaam>.github.io/finish-the-lyrics/`.
 
@@ -100,7 +112,7 @@ Je hebt twee dingen nodig: een plek waar de pagina staat (GitHub Pages) en een g
 
 1. Open je pagina, plak het Client ID en kies **🔑 Inloggen met Spotify**.
 2. Plak de link van je playlist en kies **🎶 Playlist laden**. De app zoekt dan de teksten op. Dat duurt even.
-3. Je kunt het Client ID ook vast in het bestand zetten: vul bovenin het script `DEFAULT_CLIENT_ID` in. Het Client ID is geen geheim.
+3. Je kunt het Client ID ook vast in het bestand zetten of in een link meegeven, zodat anderen het niet hoeven in te vullen (zie hierboven). Het Client ID is geen geheim.
 
 Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 
@@ -121,6 +133,7 @@ Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 | "Afspelen in de browser kan alleen met Spotify Premium" | Log in met een Premium-account. |
 | "Spotify geeft de nummers van deze playlist niet vrij" | Maak een eigen kopie van de playlist of plak de liedjes zelf. |
 | "Bij geen enkel liedje is een tijdgesynchroniseerde tekst gevonden" | Probeer een playlist met bekendere (vaak Engelstalige) nummers. |
+| Het apparaat staat in de lijst, maar afspelen lukt niet | Open de Spotify-app op dat apparaat, speel daar even een liedje af en kies in het spel **🔄 Vernieuwen**. De melding noemt de reden van Spotify. |
 | In de lijst met apparaten staat mijn telefoon of Apple TV niet | Open de Spotify-app op dat apparaat, speel kort iets af en kies **🔄 Vernieuwen**. Zorg dat het apparaat met hetzelfde Spotify-account is ingelogd. |
 | De knop ▶ blijft grijs | Wacht even tot de Spotify-speler is gestart. Werkt het niet, probeer dan Chrome of Edge op een computer. |
 | "Je login is verlopen" | Kies **Uitloggen** en log opnieuw in. |
@@ -134,7 +147,7 @@ Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 
 ## Technisch
 
-- Eén bestand (`index.html`), zonder build of afhankelijkheden. Het lettertype [Lilita One](https://fonts.google.com/specimen/Lilita+One) (SIL Open Font License 1.1) zit erin ingebouwd, dus er worden geen lettertypen van een andere site geladen.
+- Eén pagina (`index.html`), zonder build of afhankelijkheden, plus een manifest, iconen en een minimale `sw.js` voor het installeren als app. Het lettertype [Lilita One](https://fonts.google.com/specimen/Lilita+One) (SIL Open Font License 1.1) zit erin ingebouwd, dus er worden geen lettertypen van een andere site geladen.
 - Inloggen via Spotify met PKCE, nummers uit de Spotify Web API, afspelen met de Spotify Web Playback SDK (browser) of via Spotify Connect (ander apparaat).
 - Het stopmoment komt uit de tijdstempels van de tekst: de app kiest een plek waar de zang direct daarna verdergaat. Regels die vaker in het liedje voorkomen (het refrein) krijgen voorrang.
 - De schermafbeeldingen zijn gemaakt met nagebootste antwoorden van Spotify en LRCLIB en verzonnen demodata.

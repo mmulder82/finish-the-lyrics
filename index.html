@@ -115,8 +115,9 @@
 
   <!-- 1. Koppelen met Spotify -->
   <section id="screenSetup" class="card hidden">
-    <h2 style="margin-top:0">Eenmalig: koppel Spotify</h2>
-    <ol class="steps">
+    <h2 style="margin-top:0">Koppel Spotify</h2>
+    <p id="setupEasy" class="hidden" style="font-size:18px">Log in met het Spotify-account (Premium) waarmee je de muziek afspeelt. Je wachtwoord gaat alleen naar Spotify zelf.</p>
+    <ol class="steps" id="setupSteps">
       <li>Maak (met een <b>Spotify Premium</b>-account) een app aan op <b>developer.spotify.com/dashboard</b>. Kies bij "Which API/SDKs" zowel <b>Web API</b> als <b>Web Playback SDK</b>.</li>
       <li>Zet bij <b>Redirect URIs</b> precies deze link: <div class="uri" id="redirectUri" style="margin-top:6px"></div></li>
       <li>Plak hier het <b>Client ID</b> van die app:
@@ -212,6 +213,7 @@
     </div>
     <div id="skipped" class="hint"></div>
   </section>
+  <div style="text-align:center; margin-top:10px"><button class="btn alt small hidden" id="installBtn">📲 Installeer als app</button></div>
   <small class="credit">Muziek via Spotify · Tijdgesynchroniseerde teksten via LRCLIB (community-database, niet elk liedje staat erin)</small>
 </main>
 
@@ -304,6 +306,11 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
 
   /* ---------- Spotify-login (PKCE, geen geheim nodig) ---------- */
   const clientId=()=>DEFAULT_CLIENT_ID||getL("mhla.cid","");
+  let cidFromLink=false;
+  try{ const q=new URLSearchParams(location.search), c=(q.get("cid")||"").trim();   // deelbare link: …/?cid=JOUW_CLIENT_ID
+    if(!DEFAULT_CLIENT_ID&&/^[0-9a-f]{32}$/i.test(c)){ setL("mhla.cid",c); setL("mhla.cidlink","1"); q.delete("cid");
+      history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")); } }catch(e){}
+  cidFromLink=getL("mhla.cidlink","")==="1";
   function rand(n){ const a=new Uint8Array(n); crypto.getRandomValues(a); return Array.from(a,b=>"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"[b%66]).join(""); }
   async function sha256(s){ return new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s))); }
   const b64u=b=>btoa(String.fromCharCode(...b)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
@@ -348,7 +355,13 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     const r=await fetch(path.startsWith("http")?path:"https://api.spotify.com/v1"+path,
       Object.assign({},opts,{headers:Object.assign({Authorization:"Bearer "+tok,"Content-Type":"application/json"},opts.headers||{})}));
     if(r.status===429){ await sleep(2500); return sp(path,opts); }
+    if(r.status===403){ const why=await reason(r);
+      if(/not registered/i.test(why)) msg("Dit Spotify-account staat nog niet op de lijst van de app. De beheerder van de app moet het toevoegen onder <b>User management</b> in het Spotify-dashboard.","err"); }
     return r;
+  }
+  async function reason(r){          // leest de reden uit het antwoord van Spotify
+    try{ const e=(await r.clone().json()).error||{}; return [e.reason,e.message].filter(Boolean).join(" – ")||("status "+r.status); }
+    catch(e){ return "status "+r.status; }
   }
 
   /* ---------- Afspelen: in deze browser (Web Playback SDK) of op een ander Spotify-apparaat (Spotify Connect) ---------- */
@@ -387,10 +400,18 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
       if(!r.ok) throw new Error("play "+r.status);
     } else {
       if(!connectDevice) throw new Error("geen apparaat gekozen");
-      const r=await sp("/me/player/play?device_id="+encodeURIComponent(connectDevice),{method:"PUT",body});
-      if(r.status===404) throw new Error("apparaat niet gevonden, open Spotify op dat apparaat en vernieuw de lijst");
-      if(r.status===403) throw new Error("Spotify Premium is nodig");
-      if(!r.ok) throw new Error("play "+r.status);
+      const url="/me/player/play?device_id="+encodeURIComponent(connectDevice);
+      let r=await sp(url,{method:"PUT",body});
+      // Staat het apparaat op slaapstand of is het niet actief, dan eerst afspelen daarheen overzetten en opnieuw proberen
+      for(let poging=0; !r.ok && poging<2; poging++){
+        if(/PREMIUM_REQUIRED/.test(await reason(r))) break;
+        await sp("/me/player",{method:"PUT",body:JSON.stringify({device_ids:[connectDevice],play:false})});
+        await sleep(900+poging*900);
+        r=await sp(url,{method:"PUT",body});
+      }
+      if(!r.ok){ const why=await reason(r);
+        if(/PREMIUM_REQUIRED/.test(why)) throw new Error("Spotify Premium is nodig");
+        throw new Error((r.status===404?"apparaat reageert niet, open de Spotify-app op dat apparaat en speel daar even iets af, ":"")+why); }
       document.body.classList.add("playing");
     }
   }
@@ -678,7 +699,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   async function start(){
     $("redirectUri").textContent=REDIRECT;
     $("clientId").value=clientId();
-    if(DEFAULT_CLIENT_ID) $("clientId").parentElement.classList.add("hidden");
+    if(DEFAULT_CLIENT_ID||(cidFromLink&&clientId())){ $("setupSteps").classList.add("hidden"); $("setupEasy").classList.remove("hidden"); }
     $("playlistUrl").value=getL("mhla.playlist","");
     $("setManual").checked=getL("mhla.manual","0")==="1";
     $("setManual").onchange=()=>setL("mhla.manual",$("setManual").checked?"1":"0");
@@ -687,6 +708,13 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     if(getL("mhla.refresh","")||getL("mhla.access","")){ screen("Playlist"); applyMode(); }
     else screen("Setup");
   }
+  /* ---------- Installeren als app (Chrome/Edge) ---------- */
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function(){});
+  let installEvt=null;
+  window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); installEvt=e; $("installBtn").classList.remove("hidden"); });
+  $("installBtn").onclick=async()=>{ if(!installEvt) return; installEvt.prompt(); try{ await installEvt.userChoice; }catch(e){} installEvt=null; $("installBtn").classList.add("hidden"); };
+  window.addEventListener("appinstalled",()=>$("installBtn").classList.add("hidden"));
+
   start();
 })();
 </script>
