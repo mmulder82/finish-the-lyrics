@@ -48,6 +48,24 @@ Standaard kiest de app per liedje zelf een stopmoment. Wil je dat zelf bepalen, 
 
 Dit scherm toont de tekstregels, dus doe dit voordat de deelnemers meekijken. Tijdens het spel kies je met **🎲 Ander moment** een willekeurig ander stopmoment, ook bij een liedje waarvoor je zelf een moment had gekozen. Je keuzes gelden voor deze ronde en worden niet bewaard.
 
+### Afspelen op je telefoon, tablet, Apple TV of een luidspreker
+
+Naast afspelen in de browser (laptop) kun je op het beginscherm bij **Afspelen op** kiezen voor **📡 Een Spotify-apparaat**. De pagina is dan alleen de afstandsbediening en het geluid komt uit een ander apparaat: een iPhone of iPad, een Apple TV met de Spotify-app, een slimme luidspreker, een spelcomputer, enzovoort.
+
+1. Open de Spotify-app op het apparaat waar het geluid uit moet komen en speel daar kort iets af, zodat het apparaat actief is.
+2. Kies in het spel **📡 Een Spotify-apparaat** en druk op **🔄 Vernieuwen**.
+3. Kies het apparaat in de lijst en speel zoals gewoonlijk.
+
+Het volume stel je in op het apparaat zelf. Op een iPhone of iPad staat deze modus automatisch aan, want de Spotify-speler in de browser werkt daar niet.
+
+**Apple TV:** er is geen Spotify-speler voor Apple TV die deze pagina kan bedienen, maar de Spotify-app op de Apple TV verschijnt wel als apparaat in de lijst. Je speelt dan het geluid via de Apple TV en bedient het spel vanaf een laptop of telefoon. Wil je ook het scherm op de tv, spiegel dan het scherm van je laptop, iPhone of iPad via AirPlay.
+
+**Let op:** in deze modus pauzeert de app met een nauwkeurigheid van ongeveer een halve seconde, iets minder precies dan in de browser. Deze modus is getest met een nagebootst Spotify-apparaat, nog niet met echte apparaten.
+
+### Snelkoppeling op het beginscherm
+
+Op een telefoon of tablet kun je de pagina als snelkoppeling toevoegen (Deel → Zet op beginscherm). Je krijgt dan het microfoon-icoon. De pagina opent daarna gewoon in je browser en niet als losstaande app, omdat inloggen met Spotify op een iPhone niet goed werkt vanuit zo'n losstaande app.
+
 ## Schermen
 
 | | |
@@ -56,8 +74,8 @@ Dit scherm toont de tekstregels, dus doe dit voordat de deelnemers meekijken. Ti
 | **1. Eenmalig Spotify koppelen** | **2. Playlist plakken en instellingen kiezen** |
 | ![Luisteren](03-luisteren.png) | ![Songtekst tonen](05-songtekst.png) |
 | **3. Het liedje speelt** | **4. De songtekst, titel en artiest verschijnen** |
-| ![Stopmomenten kiezen](06-stopmomenten.png) | |
-| **Optioneel: zelf de stopmomenten kiezen** | |
+| ![Stopmomenten kiezen](06-stopmomenten.png) | ![Afspelen op een Spotify-apparaat](07-afspelen-op.png) |
+| **Optioneel: zelf de stopmomenten kiezen** | **Optioneel: afspelen op een telefoon, Apple TV of luidspreker** |
 
 ## Installeren
 
@@ -66,7 +84,7 @@ Je hebt twee dingen nodig: een plek waar de pagina staat (GitHub Pages) en een g
 ### 1. Zet de pagina op GitHub Pages
 
 1. Maak op GitHub een nieuwe repository, bijvoorbeeld `finish-the-lyrics`.
-2. Upload `index.html`.
+2. Upload `index.html`, `manifest.webmanifest` en de drie iconen (`icon-180.png`, `icon-192.png`, `icon-512.png`).
 3. Ga naar **Settings → Pages**, kies **Deploy from a branch**, branch `main` en map `/ (root)`.
 4. Na een minuut staat de pagina op `https://<jouw-gebruikersnaam>.github.io/finish-the-lyrics/`.
 
@@ -89,11 +107,11 @@ Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 ## Goed om te weten
 
 - **Spotify Premium** is nodig om af te spelen en om de Spotify-app aan te maken. Spotify heeft dit in februari 2026 aangescherpt.
-- **Computer met Chrome, Edge of Firefox.** De Spotify-speler in de browser werkt niet op een telefoon of tablet.
+- **Computer met Chrome, Edge of Firefox** voor afspelen in de browser. Op een telefoon of tablet kies je **Een Spotify-apparaat** (zie hierboven).
 - **Maximaal 5 gebruikers per Spotify-app** in de ontwikkelaarsmodus.
 - **De playlist moet van jou zijn, of een gedeelde playlist waar jij medewerker van bent.** Spotify geeft de nummers van andermans playlist niet vrij. Maak anders een eigen kopie (alle nummers selecteren en toevoegen aan een nieuwe playlist), of plak onder **Lukt de playlist niet?** de liedjes als `Titel - Artiest`.
 - **Niet elk liedje heeft een geschikte tekst.** De teksten komen van [LRCLIB](https://lrclib.net), een community-database met tijdstempels per regel. Liedjes zonder zulke tekst worden overgeslagen en onderaan getoond. Nederlandstalige en heel nieuwe nummers vallen vaker af.
-- **De stop is niet tot op de milliseconde.** De app pauzeert iets eerder, omdat pauzeren even duurt. Soms klopt de tijdstempel van een andere versie van het nummer niet helemaal. Kies dan **Ander moment** of ga naar het volgende liedje.
+- **De stop is niet tot op de milliseconde.** De app pauzeert iets eerder, omdat pauzeren even duurt (via een Spotify-apparaat ongeveer een halve seconde). Soms klopt de tijdstempel van een andere versie van het nummer niet helemaal. Kies dan **Ander moment** of ga naar het volgende liedje.
 
 ## Problemen oplossen
 
@@ -103,6 +121,7 @@ Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 | "Afspelen in de browser kan alleen met Spotify Premium" | Log in met een Premium-account. |
 | "Spotify geeft de nummers van deze playlist niet vrij" | Maak een eigen kopie van de playlist of plak de liedjes zelf. |
 | "Bij geen enkel liedje is een tijdgesynchroniseerde tekst gevonden" | Probeer een playlist met bekendere (vaak Engelstalige) nummers. |
+| In de lijst met apparaten staat mijn telefoon of Apple TV niet | Open de Spotify-app op dat apparaat, speel kort iets af en kies **🔄 Vernieuwen**. Zorg dat het apparaat met hetzelfde Spotify-account is ingelogd. |
 | De knop ▶ blijft grijs | Wacht even tot de Spotify-speler is gestart. Werkt het niet, probeer dan Chrome of Edge op een computer. |
 | "Je login is verlopen" | Kies **Uitloggen** en log opnieuw in. |
 
@@ -116,7 +135,7 @@ Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 ## Technisch
 
 - Eén bestand (`index.html`), zonder build of afhankelijkheden. Het lettertype [Lilita One](https://fonts.google.com/specimen/Lilita+One) (SIL Open Font License 1.1) zit erin ingebouwd, dus er worden geen lettertypen van een andere site geladen.
-- Inloggen via Spotify met PKCE, nummers uit de Spotify Web API, afspelen met de Spotify Web Playback SDK.
+- Inloggen via Spotify met PKCE, nummers uit de Spotify Web API, afspelen met de Spotify Web Playback SDK (browser) of via Spotify Connect (ander apparaat).
 - Het stopmoment komt uit de tijdstempels van de tekst: de app kiest een plek waar de zang direct daarna verdergaat. Regels die vaker in het liedje voorkomen (het refrein) krijgen voorrang.
 - De schermafbeeldingen zijn gemaakt met nagebootste antwoorden van Spotify en LRCLIB en verzonnen demodata.
 

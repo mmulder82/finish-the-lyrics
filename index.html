@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0e0e12">
+<meta name="apple-mobile-web-app-title" content="Finish the lyrics">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>Finish the lyrics</title>
 <style>
   @font-face{font-family:"Lilita One"; font-style:normal; font-weight:400; font-display:swap;
@@ -135,6 +139,12 @@
       <div><label for="setLines">Hoeveel regels moet je afmaken?</label>
         <select id="setLines"><option value="1">1 regel</option><option value="2" selected>2 regels</option><option value="3">3 regels</option></select></div>
     </div>
+    <label for="setMode">Afspelen op</label>
+    <select id="setMode"><option value="browser">💻 Deze browser (computer met Chrome, Edge of Firefox)</option><option value="connect">📡 Een Spotify-apparaat (telefoon, Apple TV, luidspreker…)</option></select>
+    <div id="devBox" class="hidden">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px"><select id="devSel" aria-label="Spotify-apparaat" style="flex:1 1 240px; width:auto"></select><button class="btn alt small" id="devRefresh" type="button">🔄 Vernieuwen</button></div>
+      <p class="hint" id="devHint"></p>
+    </div>
     <label class="chk"><input type="checkbox" id="setManual"> Ik kies zelf per liedje waar het liedje pauzeert</label>
     <div class="controls" style="justify-content:flex-start"><button class="btn" id="loadBtn">🎶 Playlist laden</button>
       <button class="btn alt small" id="logoutBtn">Uitloggen</button></div>
@@ -185,7 +195,8 @@
         <button class="btn alt small" id="contBtn">🎧 Luister verder</button>
         <button class="btn alt small" id="nextBtn">Volgende ➡</button>
       </div>
-      <div class="controls"><span class="hint">🔈</span><input type="range" id="vol" min="0" max="100" value="80" style="width:160px;padding:0"></div>
+      <div class="controls" id="volRow"><span class="hint">🔈</span><input type="range" id="vol" min="0" max="100" value="80" style="width:160px;padding:0"></div>
+      <p class="hint" id="deviceNote" style="text-align:center"></p>
       <p class="hint" style="text-align:center">Toetsen: spatie = afspelen · Enter = songtekst · pijltjes = vorige/volgende</p>
     </div>
 
@@ -340,8 +351,15 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     return r;
   }
 
-  /* ---------- Afspeler (Spotify Web Playback SDK) ---------- */
-  let player=null, deviceId=null, activated=false, watch=null;
+  /* ---------- Afspelen: in deze browser (Web Playback SDK) of op een ander Spotify-apparaat (Spotify Connect) ---------- */
+  const IS_APPLE_TOUCH=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const CONNECT_MARGIN_MS=600;   // via Spotify Connect duurt pauzeren langer dan in de browser
+  let mode=IS_APPLE_TOUCH?"connect":getL("mhla.mode","browser");   // de browserspeler van Spotify werkt niet op iPhone/iPad
+  let player=null, deviceId=null, activated=false, watch=null, pauseTimer=null, armToken=null;
+  let connectDevice=getL("mhla.dev",""), connectName="";
+  const canPlay=()=>mode==="browser"?!!deviceId:!!connectDevice;
+  function stopWatch(){ clearInterval(watch); clearTimeout(pauseTimer); armToken=null; }
+
   function initPlayer(){
     if(player||window.__sdkLoading) return; window.__sdkLoading=true;
     window.onSpotifyWebPlaybackSDKReady=()=>{
@@ -350,32 +368,109 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
       player.addListener("not_ready",()=>{ deviceId=null; updateButtons(); });
       player.addListener("account_error",()=>msg("Afspelen in de browser kan alleen met <b>Spotify Premium</b>.","err"));
       player.addListener("authentication_error",()=>msg("Spotify-login is verlopen. Log opnieuw in.","err"));
-      player.addListener("initialization_error",()=>msg("Deze browser ondersteunt de Spotify-speler niet. Gebruik Chrome, Edge of Firefox op een computer.","err"));
+      player.addListener("initialization_error",()=>msg("Deze browser ondersteunt de Spotify-speler niet. Kies bij <b>Afspelen op</b> een Spotify-apparaat.","err"));
       player.addListener("player_state_changed",s=>document.body.classList.toggle("playing",!!s&&!s.paused));
       player.connect();
     };
     const s=document.createElement("script"); s.src="https://sdk.scdn.co/spotify-player.js"; document.head.appendChild(s);
   }
   async function playFrom(uri,posMs){
-    if(!player||!deviceId) throw new Error("speler niet klaar");
-    if(!activated){ try{ player.activateElement(); }catch(e){} activated=true; }
-    clearInterval(watch);
-    try{ await player.pause(); }catch(e){}
+    stopWatch();
     const body=JSON.stringify({uris:[uri],position_ms:Math.max(0,Math.round(posMs))});
-    let r=await sp("/me/player/play?device_id="+deviceId,{method:"PUT",body});
-    if(r.status===404){ await sp("/me/player",{method:"PUT",body:JSON.stringify({device_ids:[deviceId],play:false})}); await sleep(600);
-      r=await sp("/me/player/play?device_id="+deviceId,{method:"PUT",body}); }
-    if(!r.ok) throw new Error("play "+r.status);
+    if(mode==="browser"){
+      if(!player||!deviceId) throw new Error("speler niet klaar");
+      if(!activated){ try{ player.activateElement(); }catch(e){} activated=true; }
+      try{ await player.pause(); }catch(e){}
+      let r=await sp("/me/player/play?device_id="+deviceId,{method:"PUT",body});
+      if(r.status===404){ await sp("/me/player",{method:"PUT",body:JSON.stringify({device_ids:[deviceId],play:false})}); await sleep(600);
+        r=await sp("/me/player/play?device_id="+deviceId,{method:"PUT",body}); }
+      if(!r.ok) throw new Error("play "+r.status);
+    } else {
+      if(!connectDevice) throw new Error("geen apparaat gekozen");
+      const r=await sp("/me/player/play?device_id="+encodeURIComponent(connectDevice),{method:"PUT",body});
+      if(r.status===404) throw new Error("apparaat niet gevonden, open Spotify op dat apparaat en vernieuw de lijst");
+      if(r.status===403) throw new Error("Spotify Premium is nodig");
+      if(!r.ok) throw new Error("play "+r.status);
+      document.body.classList.add("playing");
+    }
+  }
+  async function pauseNow(){
+    if(mode==="browser"){ if(player) await player.pause(); }
+    else if(connectDevice){ document.body.classList.remove("playing"); await sp("/me/player/pause?device_id="+encodeURIComponent(connectDevice),{method:"PUT"}); }
+  }
+  function pauseQuiet(){ stopWatch(); pauseNow().catch(function(){}); }
+  async function togglePause(){
+    stopWatch();
+    if(mode==="browser"){ if(player){ const s=await player.getCurrentState(); if(s&&s.paused) await player.resume(); else await player.pause(); } return; }
+    if(!connectDevice) return;
+    const r=await sp("/me/player"); const j=r.status===200?await r.json():null;
+    if(j&&j.is_playing) await pauseNow();
+    else { await sp("/me/player/play?device_id="+encodeURIComponent(connectDevice),{method:"PUT"}); document.body.classList.add("playing"); }
   }
   function armStop(startMs,stopMs,onStop){
-    clearInterval(watch);
-    const armedAt=performance.now();
-    watch=setInterval(async()=>{
-      if(performance.now()-armedAt<700) return;
-      const s=await player.getCurrentState();
-      if(!s||s.paused||s.position<startMs-500) return;
-      if(s.position>=stopMs-STOP_MARGIN_MS){ clearInterval(watch); await player.pause(); onStop(); }
-    },60);
+    stopWatch();
+    if(mode==="browser"){
+      const armedAt=performance.now();
+      watch=setInterval(async()=>{
+        if(performance.now()-armedAt<700) return;
+        const s=await player.getCurrentState();
+        if(!s||s.paused||s.position<startMs-500) return;
+        if(s.position>=stopMs-STOP_MARGIN_MS){ clearInterval(watch); await player.pause(); onStop(); }
+      },60);
+    } else armStopConnect(startMs,stopMs,onStop);
+  }
+  /* Via Spotify Connect kunnen we de positie alleen opvragen: elke ~1 seconde kijken, daarna de pauze zelf inplannen */
+  function armStopConnect(startMs,stopMs,onStop){
+    const token=armToken={};
+    const poll=delay=>{
+      pauseTimer=setTimeout(async()=>{
+        if(armToken!==token) return;
+        const t0=performance.now(); let j=null;
+        try{ const r=await sp("/me/player"); if(r.status===200) j=await r.json(); }catch(e){}
+        const t1=performance.now();
+        if(armToken!==token) return;
+        if(!j||!j.is_playing||j.progress_ms==null||j.progress_ms<startMs-2000){ poll(400); return; }   // nog niet gestart, of oude status
+        const posNow=j.progress_ms+(performance.now()-(t0+t1)/2);
+        const remaining=stopMs-CONNECT_MARGIN_MS-posNow;
+        if(remaining<=1200){
+          pauseTimer=setTimeout(async()=>{ if(armToken!==token) return; armToken=null; try{ await pauseNow(); }catch(e){} onStop(); },Math.max(0,remaining));
+        } else poll(Math.max(300,Math.min(1000,remaining-1300)));
+      },delay);
+    };
+    poll(900);
+  }
+
+  /* ---------- Kiezen waar het geluid vandaan komt ---------- */
+  function applyMode(){
+    $("setMode").value=mode;
+    $("devBox").classList.toggle("hidden",mode!=="connect");
+    $("volRow").classList.toggle("hidden",mode!=="browser");
+    if(IS_APPLE_TOUCH) [...$("setMode").options].forEach(o=>{ if(o.value==="browser") o.disabled=true; });
+    if(mode==="connect") refreshDevices(); else initPlayer();
+    updateButtons();
+  }
+  async function refreshDevices(){
+    const sel=$("devSel"); $("devHint").textContent="Apparaten zoeken…";
+    let list=[];
+    try{ const r=await sp("/me/player/devices"); if(r.ok) list=((await r.json()).devices||[]).filter(d=>!d.is_restricted&&d.name!=="Finish the lyrics"); }catch(e){}
+    sel.innerHTML=list.length
+      ? list.map(d=>'<option value="'+esc(d.id)+'">'+esc(d.name)+' ('+esc(d.type)+')'+(d.is_active?' · actief':'')+'</option>').join("")
+      : '<option value="">Geen apparaten gevonden</option>';
+    if(list.some(d=>d.id===connectDevice)) sel.value=connectDevice;
+    connectDevice=sel.value||""; setL("mhla.dev",connectDevice);
+    connectName=(list.find(d=>d.id===connectDevice)||{}).name||"";
+    $("devHint").textContent=list.length
+      ? "Het geluid komt uit dit apparaat. Zet het volume op het apparaat zelf. Deze pagina is alleen de afstandsbediening."
+      : "Open de Spotify-app op je telefoon, Apple TV of luidspreker en speel kort iets af. Tik daarna op Vernieuwen.";
+    updateButtons();
+  }
+  $("setMode").onchange=()=>{ pauseQuiet(); mode=$("setMode").value; setL("mhla.mode",mode); applyMode(); };
+  $("devSel").onchange=()=>{ connectDevice=$("devSel").value; setL("mhla.dev",connectDevice);
+    const o=$("devSel").selectedOptions[0]; connectName=o?o.textContent.replace(/ \(.*$/,""):""; updateButtons(); };
+  $("devRefresh").onclick=refreshDevices;
+  function needDevice(){
+    if(mode==="connect"&&!connectDevice){ msg("Kies eerst bij <b>Afspelen op</b> een Spotify-apparaat. Staat het er niet bij, open dan Spotify op dat apparaat en tik op Vernieuwen.","err"); return true; }
+    return false;
   }
 
   /* ---------- Playlist en teksten ---------- */
@@ -475,17 +570,18 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     try{ await playFrom(t.uri,st.startMs); armStop(st.startMs,st.stopMs,function(){}); }
     catch(err){ msg("Afspelen lukt niet ("+esc(err.message)+").","err"); }
   };
-  $("prepStart").onclick=()=>{ clearInterval(watch); if(player) player.pause().catch(function(){}); msg(""); screen("Game"); enter(0); };
+  $("prepStart").onclick=()=>{ pauseQuiet(); msg(""); screen("Game"); enter(0); };
 
   /* ---------- Spel ---------- */
   let deck=[], i=0, cur=null;
   function updateButtons(){
-    const ready=!!deviceId&&!!cur;
+    const ready=canPlay()&&!!cur;
     $("playBtn").disabled=!ready; $("contBtn").disabled=!ready||!cur.stop; $("pauseBtn").disabled=!ready;
-    if(!deviceId&&$("screenGame").offsetParent) $("status").textContent="Spotify-speler wordt gestart…";
+    $("deviceNote").textContent=mode==="connect"&&connectName?"📡 Speelt op: "+connectName:"";
+    if(!canPlay()&&$("screenGame").offsetParent) $("status").textContent=mode==="browser"?"Spotify-speler wordt gestart…":"Kies eerst een apparaat";
   }
   function enter(n){
-    clearInterval(watch); if(player) player.pause().catch(()=>{});
+    pauseQuiet();
     for(let k=0;k<deck.length;k++){
       i=((n+k)%deck.length+deck.length)%deck.length; const t=deck[i];
       let stop=t.manualJ!=null?stopAt(t.lines,t.manualJ,settings().lines,settings().lead):null;
@@ -503,7 +599,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     try{
       await playFrom(track.uri,stop.startMs);
       armStop(stop.startMs,stop.stopMs,()=>{ $("status").textContent="⏸ STOP! Maak de tekst af 🎤"; });
-    }catch(e){ msg("Afspelen lukt niet ("+esc(e.message)+"). Is Spotify Premium actief en de pagina geopend in Chrome, Edge of Firefox?","err"); }
+    }catch(e){ msg("Afspelen lukt niet ("+esc(e.message)+"). "+(mode==="browser"?"Is Spotify Premium actief en de pagina geopend in Chrome, Edge of Firefox?":"Is Spotify Premium actief en de Spotify-app op dat apparaat geopend?"),"err"); }
   }
   function reveal(){
     cur.revealed=!cur.revealed;
@@ -516,13 +612,13 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     } else { $("answer").classList.add("hidden"); $("whoami").classList.add("hidden"); $("revealBtn").textContent="👀 Toon songtekst"; }
   }
   $("playBtn").onclick=playSnippet;
-  $("pauseBtn").onclick=async()=>{ clearInterval(watch); if(player){ const s=await player.getCurrentState(); if(s&&s.paused) await player.resume(); else await player.pause(); } };
+  $("pauseBtn").onclick=async()=>{ try{ await togglePause(); }catch(e){} };
   $("revealBtn").onclick=reveal;
   $("nextBtn").onclick=()=>enter(i+1);
   $("prevBtn").onclick=()=>enter(i-1);
   $("rerollBtn").onclick=()=>{ deck[i].manualJ=null; enter(i); };
   $("contBtn").onclick=async()=>{ try{ await playFrom(cur.track.uri,cur.stop.stopMs-200); $("status").textContent="🎶 Zo ging het verder…"; }catch(e){ msg("Afspelen lukt niet.","err"); } };
-  $("vol").oninput=e=>{ if(player) player.setVolume(e.target.value/100); };
+  $("vol").oninput=e=>{ if(mode==="browser"&&player) player.setVolume(e.target.value/100); };
   document.addEventListener("keydown",e=>{
     if(!$("screenGame").offsetParent||["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)) return;
     if(e.key===" "){ e.preventDefault(); if(!$("playBtn").disabled) playSnippet(); }
@@ -552,8 +648,9 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   /* ---------- Knoppen en opstart ---------- */
   $("loginBtn").onclick=login;
   $("logoutBtn").onclick=logout;
-  $("backBtn").onclick=()=>{ clearInterval(watch); if(player) player.pause().catch(()=>{}); msg(""); screen("Playlist"); };
+  $("backBtn").onclick=()=>{ pauseQuiet(); msg(""); screen("Playlist"); };
   $("loadBtn").onclick=async()=>{
+    if(needDevice()) return;
     const v=$("playlistUrl").value.trim(); const m=v.match(/playlist[\/:]([A-Za-z0-9]+)/)||v.match(/^([A-Za-z0-9]{22})$/);
     if(!m){ msg("Dat lijkt geen Spotify-playlistlink. Kopieer de link via Delen → Link naar playlist kopiëren.","err"); return; }
     setL("mhla.playlist",v); msg(""); screen("Loading"); progress(0,1,"Playlist ophalen…");
@@ -568,6 +665,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     }
   };
   $("pasteBtn").onclick=async()=>{
+    if(needDevice()) return;
     const lines=$("pasteList").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
     if(!lines.length){ msg("Plak eerst een paar liedjes.","err"); return; }
     msg(""); screen("Loading"); progress(0,lines.length,"Zoeken in Spotify…");
@@ -586,7 +684,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     $("setManual").onchange=()=>setL("mhla.manual",$("setManual").checked?"1":"0");
     renderPlayers();
     await handleReturn();
-    if(getL("mhla.refresh","")||getL("mhla.access","")){ screen("Playlist"); initPlayer(); }
+    if(getL("mhla.refresh","")||getL("mhla.access","")){ screen("Playlist"); applyMode(); }
     else screen("Setup");
   }
   start();
