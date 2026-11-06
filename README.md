@@ -6,7 +6,7 @@ Je geeft alleen een Spotify-playlist op. De app zoekt zelf de tijdgesynchronisee
 
 > De schermafbeeldingen hieronder zijn gemaakt met verzonnen demoliedjes en demoteksten. Bij een echte playlist zie je jullie eigen nummers.
 
-![Het stopmoment: "STOP! Maak de tekst af"](screenshots/04-stop.png)
+![Het stopmoment: "STOP! Maak de tekst af"](04-stop.png)
 
 ## Zo speel je het
 
@@ -37,9 +37,9 @@ Op het beginscherm kies je hoeveel seconden er vóór de stop wordt gespeeld (6 
 
 | | |
 |---|---|
-| ![Spotify koppelen](screenshots/01-koppelen.png) | ![Playlist kiezen](screenshots/02-playlist.png) |
+| ![Spotify koppelen](01-koppelen.png) | ![Playlist kiezen](02-playlist.png) |
 | **1. Eenmalig Spotify koppelen** | **2. Playlist plakken en instellingen kiezen** |
-| ![Luisteren](screenshots/03-luisteren.png) | ![Songtekst tonen](screenshots/05-songtekst.png) |
+| ![Luisteren](03-luisteren.png) | ![Songtekst tonen](05-songtekst.png) |
 | **3. Het liedje speelt** | **4. De songtekst, titel en artiest verschijnen** |
 
 ## Installeren
@@ -49,7 +49,7 @@ Je hebt twee dingen nodig: een plek waar de pagina staat (GitHub Pages) en een g
 ### 1. Zet de pagina op GitHub Pages
 
 1. Maak op GitHub een nieuwe repository, bijvoorbeeld `finish-the-lyrics`.
-2. Upload `index.html` (en desgewenst deze README en de map `screenshots`).
+2. Upload `index.html`.
 3. Ga naar **Settings → Pages**, kies **Deploy from a branch**, branch `main` en map `/ (root)`.
 4. Na een minuut staat de pagina op `https://<jouw-gebruikersnaam>.github.io/finish-the-lyrics/`.
 
