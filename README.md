@@ -35,6 +35,17 @@ In het scorebord krijgt elk team automatisch een eigen kleur (acht kleuren, daar
 
 Op het beginscherm kies je hoeveel seconden er vóór de stop wordt gespeeld (6 tot 25) en hoeveel regels er moeten worden afgemaakt (1 tot 3).
 
+### Zelf kiezen waar het liedje pauzeert
+
+Standaard kiest de app per liedje zelf een stopmoment. Wil je dat zelf bepalen, vink dan op het beginscherm **"Ik kies zelf per liedje waar het liedje pauzeert"** aan. Na het laden van de playlist zie je een keuzescherm:
+
+- Kies per liedje in de lijst na welke regel het liedje pauzeert. De tijd staat erbij.
+- Met **🎧 Beluister** hoor je meteen het stuk vóór die stop.
+- Laat je een liedje op **🎲 Laat de app kiezen** staan, dan kiest de app zelf, net als anders.
+- Druk op **▶ Start het spel** als je klaar bent.
+
+Dit scherm toont de tekstregels, dus doe dit voordat de deelnemers meekijken. Tijdens het spel kies je met **🎲 Ander moment** een willekeurig ander stopmoment, ook bij een liedje waarvoor je zelf een moment had gekozen. Je keuzes gelden voor deze ronde en worden niet bewaard.
+
 ## Schermen
 
 | | |
@@ -43,6 +54,8 @@ Op het beginscherm kies je hoeveel seconden er vóór de stop wordt gespeeld (6 
 | **1. Eenmalig Spotify koppelen** | **2. Playlist plakken en instellingen kiezen** |
 | ![Luisteren](03-luisteren.png) | ![Songtekst tonen](05-songtekst.png) |
 | **3. Het liedje speelt** | **4. De songtekst, titel en artiest verschijnen** |
+| ![Stopmomenten kiezen](06-stopmomenten.png) | |
+| **Optioneel: zelf de stopmomenten kiezen** | |
 
 ## Installeren
 

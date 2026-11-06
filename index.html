@@ -88,6 +88,13 @@
   .player .score{background:var(--c,var(--teal)); color:#0b0b0f; font-family:var(--display); font-size:40px; line-height:1.15; padding:4px 0}
   .player .pb .btn.mint{background:var(--c,var(--teal)); box-shadow:0 4px 0 rgba(0,0,0,.55)}
   .player .pb{display:flex; gap:6px; justify-content:center; padding:10px 6px; background:var(--panel)}
+  .chk{display:flex; gap:10px; align-items:center; margin-top:16px; text-transform:none; letter-spacing:0; font-size:15px; color:#fff; cursor:pointer}
+  .chk input{width:22px; height:22px; padding:0; accent-color:var(--pink); flex:none}
+  .prep-row{background:#0e0e12; border:2px solid #2b2b36; border-radius:16px; padding:12px 14px; margin-bottom:10px}
+  .prep-row .nm{font-family:var(--display); font-size:20px; margin-bottom:8px}
+  .prep-row .nm small{display:block; font-family:"Segoe UI",system-ui,sans-serif; font-size:14px; color:var(--muted); font-weight:700}
+  .prep-row .sel{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .prep-row select{flex:1 1 260px; width:auto; min-width:0}
   details summary{cursor:pointer; font-weight:800; color:var(--teal)}
   small.credit{display:block; text-align:center; color:#7d7d8e; margin-top:6px}
 </style>
@@ -128,6 +135,7 @@
       <div><label for="setLines">Hoeveel regels moet je afmaken?</label>
         <select id="setLines"><option value="1">1 regel</option><option value="2" selected>2 regels</option><option value="3">3 regels</option></select></div>
     </div>
+    <label class="chk"><input type="checkbox" id="setManual"> Ik kies zelf per liedje waar het liedje pauzeert</label>
     <div class="controls" style="justify-content:flex-start"><button class="btn" id="loadBtn">🎶 Playlist laden</button>
       <button class="btn alt small" id="logoutBtn">Uitloggen</button></div>
 
@@ -144,6 +152,16 @@
     <h2 style="margin-top:0" id="loadTitle">Bezig…</h2>
     <div class="bar"><div id="loadBar"></div></div>
     <p class="hint" id="loadText"></p>
+  </section>
+
+  <!-- 3b. Stopmomenten kiezen (optioneel) -->
+  <section id="screenPrep" class="hidden">
+    <div class="card">
+      <h2 style="margin-top:0">Kies je stopmomenten</h2>
+      <p class="hint">Kies per liedje na welke regel het liedje pauzeert. Laat je het op 🎲 staan, dan kiest de app zelf een moment. Met <b>🎧 Beluister</b> hoor je het stuk vóór de stop. Let op: dit scherm laat de tekstregels zien, kijk dus niet mee als deelnemers meekijken.</p>
+      <div id="prepList"></div>
+      <div class="controls"><button class="btn" id="prepStart">▶ Start het spel</button></div>
+    </div>
   </section>
 
   <!-- 4. Spel -->
@@ -210,36 +228,50 @@ function cleanTitle(s){
   return String(s).replace(/\s*[-–]\s*(remaster|remastered|live|radio edit|single version|\d{4}|version|mono|stereo|from|bonus|deluxe).*$/i,"")
                   .replace(/\s*[(\[].*?[)\]]/g,"").trim();
 }
+function fmtTime(ms){ const s=Math.floor(ms/1000); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
 
-/* Kiest een stopmoment: de eerste ontbrekende regel begint direct na de stop. Refreinregels (komen vaker voor) wegen zwaarder. */
+/* Indexen van regels met tekst (lege regels in de LRC markeren alleen pauzes) */
+function textIdx(lines){ const idx=[]; lines.forEach((l,i)=>{ if(l.text) idx.push(i); }); return idx; }
+
+/* Stop na tekstregel nummer j: de eerstvolgende regels (nMissing) zijn de ontbrekende tekst */
+function stopFor(lines,idx,j,nMissing,leadMs){
+  if(j<0||j+nMissing>=idx.length) return null;
+  const sung=idx[j], nextEntry=lines[sung+1]; if(!nextEntry) return null;
+  const stopT=Math.min(nextEntry.t, lines[sung].t+7000);          // einde van de laatst gezongen regel
+  const missing=[]; for(let k=1;k<=nMissing;k++) missing.push(lines[idx[j+k]].text);
+  let startMs=Math.max(0,stopT-leadMs);                             // begin van een regel, ongeveer leadMs vóór de stop
+  for(let k=0;k<idx.length;k++){ const t=lines[idx[k]].t; if(t<=stopT-leadMs) startMs=t; else break; }
+  return { j, startMs, stopMs:stopT, resumeMs:lines[idx[j+1]].t, context:lines[sung].text, missing };
+}
+/* Alle mogelijke stopmomenten van een liedje (voor de handmatige keuze) */
+function listStops(lines,nMissing,leadMs){
+  const idx=textIdx(lines), out=[];
+  for(let j=0;j<idx.length;j++){ const s=stopFor(lines,idx,j,nMissing,leadMs); if(s) out.push(s); }
+  return out;
+}
+function stopAt(lines,j,nMissing,leadMs){ return stopFor(lines,textIdx(lines),j,nMissing,leadMs); }
+
+/* Kiest zelf een stopmoment: de zang hervat direct daarna. Refreinregels (komen vaker voor) wegen zwaarder. */
 function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   rnd=rnd||Math.random;
-  const idx=[]; lines.forEach((l,i)=>{ if(l.text) idx.push(i); });
+  const idx=textIdx(lines);
   if(idx.length<nMissing+3) return null;
   const counts={}; idx.forEach(i=>{ const k=norm(lines[i].text); if(k) counts[k]=(counts[k]||0)+1; });
   const cands=[];
   for(let j=1;j+nMissing<idx.length;j++){
-    const sung=idx[j], nextEntry=lines[sung+1];
-    if(!nextEntry) continue;
-    const stopT=Math.min(nextEntry.t, lines[sung].t+7000);          // einde van de laatst gezongen regel
-    const m1=lines[idx[j+1]], mN=lines[idx[j+nMissing]];
-    if(stopT<20000) continue;
-    if(durationMs && stopT>durationMs*0.85) continue;
-    if(m1.t-stopT>4000) continue;                                    // zang hervat vrijwel meteen
-    if(mN.t-m1.t>12000) continue;
-    const missing=[]; for(let k=1;k<=nMissing;k++) missing.push(lines[idx[j+k]].text);
-    if(missing.join(" ").length<10) continue;
-    const chorus=(counts[norm(missing[0])]||0)>=2;
-    cands.push({j,stopT,missing,w:chorus?3:1});
+    const s=stopFor(lines,idx,j,nMissing,leadMs); if(!s) continue;
+    if(s.stopMs<20000) continue;
+    if(durationMs && s.stopMs>durationMs*0.85) continue;
+    if(s.resumeMs-s.stopMs>4000) continue;                           // zang hervat vrijwel meteen
+    if(lines[idx[j+nMissing]].t-s.resumeMs>12000) continue;
+    if(s.missing.join(" ").length<10) continue;
+    const chorus=(counts[norm(s.missing[0])]||0)>=2;
+    cands.push({s,w:chorus?3:1});
   }
   if(!cands.length) return null;
-  let tot=cands.reduce((s,c)=>s+c.w,0), r=rnd()*tot, pick=cands[cands.length-1];
+  let tot=cands.reduce((a,c)=>a+c.w,0), r=rnd()*tot, pick=cands[cands.length-1];
   for(const c of cands){ r-=c.w; if(r<=0){ pick=c; break; } }
-  // startpunt: begin van een regel, ongeveer leadMs vóór de stop
-  let startMs=Math.max(0,pick.stopT-leadMs);
-  for(let k=0;k<idx.length;k++){ const t=lines[idx[k]].t; if(t<=pick.stopT-leadMs) startMs=t; else break; }
-  return { startMs, stopMs:pick.stopT, resumeMs:lines[idx[pick.j+1]].t,
-           context:lines[idx[pick.j]].text, missing:pick.missing };
+  return pick.s;
 }
 /*LOGIC-END*/
 
@@ -257,7 +289,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   const delL=k=>{ try{ LS.removeItem(k) }catch(e){} };
 
   function msg(t,kind){ const m=$("msg"); if(!t){ m.classList.add("hidden"); return; } m.className="msg "+(kind||""); m.innerHTML=t; }
-  function screen(n){ ["Setup","Playlist","Loading","Game"].forEach(s=>$("screen"+s).classList.toggle("hidden",s!==n)); }
+  function screen(n){ ["Setup","Playlist","Loading","Prep","Game"].forEach(s=>$("screen"+s).classList.toggle("hidden",s!==n)); }
 
   /* ---------- Spotify-login (PKCE, geen geheim nodig) ---------- */
   const clientId=()=>DEFAULT_CLIENT_ID||getL("mhla.cid","");
@@ -418,8 +450,32 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     if(!ok.length){ screen("Playlist"); msg("Bij geen enkel liedje is een tijdgesynchroniseerde tekst gevonden. Probeer een playlist met meer bekende (Engelstalige) hits.","err"); return; }
     deck=shuffle(ok); $("skipped").innerHTML=skipped.length
       ? "Overgeslagen, geen geschikte tekst gevonden: "+skipped.map(t=>esc(t.name+" – "+(t.artists[0]||""))).join(", ") : "";
-    msg(""); screen("Game"); enter(0);
+    msg("");
+    if($("setManual").checked) showPrep(); else { screen("Game"); enter(0); }
   }
+
+  /* ---------- Stopmomenten zelf kiezen ---------- */
+  function showPrep(){
+    screen("Prep");
+    const s=settings();
+    $("prepList").innerHTML=deck.map((t,k)=>{
+      const opts=listStops(t.lines,s.lines,s.lead).map(x=>'<option value="'+x.j+'"'+(t.manualJ===x.j?' selected':'')+'>'+fmtTime(x.stopMs)+' · na: '+
+        esc(x.context.length>70?x.context.slice(0,67)+"…":x.context)+'</option>').join("");
+      return '<div class="prep-row"><div class="nm">'+esc(t.name)+'<small>'+esc(t.artists.join(", "))+'</small></div><div class="sel">'+
+        '<select data-i="'+k+'" aria-label="Stopmoment voor '+esc(t.name)+'"><option value="">🎲 Laat de app kiezen</option>'+opts+'</select>'+
+        '<button class="btn alt small" data-i="'+k+'">🎧 Beluister</button></div></div>';
+    }).join("");
+  }
+  $("prepList").onchange=e=>{ const sel=e.target.closest("select"); if(sel) deck[+sel.dataset.i].manualJ=sel.value===""?null:+sel.value; };
+  $("prepList").onclick=async e=>{
+    const b=e.target.closest("button"); if(!b) return;
+    const t=deck[+b.dataset.i], s=settings();
+    const st=t.manualJ!=null?stopAt(t.lines,t.manualJ,s.lines,s.lead):pickStop(t.lines,t.durMs,s.lines,s.lead);
+    if(!st) return;
+    try{ await playFrom(t.uri,st.startMs); armStop(st.startMs,st.stopMs,function(){}); }
+    catch(err){ msg("Afspelen lukt niet ("+esc(err.message)+").","err"); }
+  };
+  $("prepStart").onclick=()=>{ clearInterval(watch); if(player) player.pause().catch(function(){}); msg(""); screen("Game"); enter(0); };
 
   /* ---------- Spel ---------- */
   let deck=[], i=0, cur=null;
@@ -432,7 +488,8 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     clearInterval(watch); if(player) player.pause().catch(()=>{});
     for(let k=0;k<deck.length;k++){
       i=((n+k)%deck.length+deck.length)%deck.length; const t=deck[i];
-      const stop=pickStop(t.lines,t.durMs,settings().lines,settings().lead);
+      let stop=t.manualJ!=null?stopAt(t.lines,t.manualJ,settings().lines,settings().lead):null;
+      if(!stop) stop=pickStop(t.lines,t.durMs,settings().lines,settings().lead);
       if(stop){ cur={track:t,stop,revealed:false}; break; }
     }
     $("counter").textContent="Liedje "+(i+1)+" van "+deck.length;
@@ -463,7 +520,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   $("revealBtn").onclick=reveal;
   $("nextBtn").onclick=()=>enter(i+1);
   $("prevBtn").onclick=()=>enter(i-1);
-  $("rerollBtn").onclick=()=>enter(i);
+  $("rerollBtn").onclick=()=>{ deck[i].manualJ=null; enter(i); };
   $("contBtn").onclick=async()=>{ try{ await playFrom(cur.track.uri,cur.stop.stopMs-200); $("status").textContent="🎶 Zo ging het verder…"; }catch(e){ msg("Afspelen lukt niet.","err"); } };
   $("vol").oninput=e=>{ if(player) player.setVolume(e.target.value/100); };
   document.addEventListener("keydown",e=>{
@@ -525,6 +582,8 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     $("clientId").value=clientId();
     if(DEFAULT_CLIENT_ID) $("clientId").parentElement.classList.add("hidden");
     $("playlistUrl").value=getL("mhla.playlist","");
+    $("setManual").checked=getL("mhla.manual","0")==="1";
+    $("setManual").onchange=()=>setL("mhla.manual",$("setManual").checked?"1":"0");
     renderPlayers();
     await handleReturn();
     if(getL("mhla.refresh","")||getL("mhla.access","")){ screen("Playlist"); initPlayer(); }
