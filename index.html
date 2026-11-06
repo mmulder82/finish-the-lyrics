@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e0e12">
+<title>Finish the lyrics</title>
+<style>
+  @font-face{font-family:"Lilita One"; font-style:normal; font-weight:400; font-display:swap;
+             src:url(data:font/woff2;base64,d09GMgABAAAAACmwAA8AAAAAYAQAAClUAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGhYbhFIcGAZgAIE8EQgKgaQMgYJtC4MuAAE2AiQDhlgEIAWDZAeDYwwHG7BMs6KGsl56RwaCjYMAWQujKFmbfvFfJm9KX9BJk6DJcUUJjKMEdj5chK6ho+JEFeSHUCatu/1+tRYeobFPcuH5fr/fr73PxU2bZTyS8cRQSd7w6dbM2n/tN03a/AzPu63nAGQIfD6gsAUUVFDEMXGxBAcg4p45Z9NVNvbZXDY0M63OsjkcdXV3Xd1orbuy6QlWXJjkyJ7wVatS9Ap3lv6fP2DNPR8SDSSEMEgTX0BYfj99U3NGOpyJiwLLB2QIEezu2NrkFJ96dVqVYV7y917ztysZ7lhSZBkhALRQho+f+v5STVuPDzVIQcZjQfY63PuqtUPLMCCNNPluN5lMdt1j/f1UpXqZdudCcbJZAVwAtYCWFSDpaTTvfynjd0qOM/a3O2xn7Y7JwnoFqCwAWu500zXm8SJQQAoYLsCs/r/7qS0LXSFn7KzrSQlgzDdJ4X0YsNCsxsKAUHN2V2Mti0lMH9sjh6k2s8N37vBEJBKSuCeTZDKdZpY8kaA38Qzmr9nvEO1YY4ww8Dzv6Rd/frrynfN1ESSELpxXT9VDNtO8bwsSRS9iEIG1AgL4Aq4iwt/tbg+8iUeMxdxPTRmwwQH4XHizv1UVNkUawRXIc+Hp/O/IX5Gnje3oDq5pNZPNhp/2qRJFzQJ/UnHGDXekeOKFL/4EEIRWjFQWtF9A03oBZcRJrII4GX+WYCBJpl6xZYER0fBJlzYkuY5QooySFaXQfiQEu0Wy+6RCXsHQgq0CIkAXMlwxUqxDcSAzCfGUYtBBYtoFBKlWSvaaTIESnRAmlX2flAypBTQQATqIhThK5YEIz+AhyOK6YniDjGJJpPlCfAeJsaSjZC/SLKi1hFvggjvJXyhIkbzKUAaDJ/Qll1i+ZkUF1Mrs164lI6BU1d2W1E1SutqbI2CuVCgpZp+ocJFU+CH/3RdAQcZUNR+rpeFQzQfvonKwFRCgVy0G2ICzyHsyvgHKsWAJyGB2t1sa/I41gVDch2S14RwBZsvvj2UI+d0YT7wJqDRAqOYC8605dNPh2k/hzoLDZi08ZupSv/b7J5lL57K5PK4TN4Cr5PYueDzS7CyARLbrn8di2UUw157LXMU/1X539sZu+cr/+x/85XuBEfTjCA5iP9ZjGYSPjp7zzIJMQ5HYWQhZroCcBmQtEP2ZlfgeZ8YR19nGG9xQ5HAFUNuIzCJLYe1isXDMwExKlN0kpcHz46Gog1BUdDCcsDkZHajjhKNMSqonRcVo3EUiRBt9Zem/qFocjqFPfkgB5r9EkqXAzT2sLJeyXxuGAygcmp9l/etYKc/4GgizRNy1S9oMk9F9tWzWfZjHEmXxggqnym9+Qz01ZSNsI/p775VXU6U7YI5K7wKSVhs9rpvRtgPXO35Ih5B8jvrDfFVurrkPEHEM+ByI3G9otYMrsKX2PwUXPfufDSOi0bqEToooQQAXd7dIbranXnqgX9s1rQVYV2UoLUBQRAmAVIsxh7fkxcP0o9rjHGFRQBIRtgCTfqccV+sVQREtv0ZZTkBU4pdFCEisKERiBXAR4FHacSQxySNTqRm2Xp8r+wRmYkP7PGOATfV/2paVrNLI00DsqCLmXDjDdL2DiTK3YMUZahj7TZbD75AZuv67lHJ1rF0YhiOwcfolJZYqP2UeunriEuMLkhqmao1QrmvZWMqNmRpqS9ZTuhzzfaa9WLCdwV/MYLooEnnOg4DDlkLSN3nAIVQczsi4ewyqy1mY1tv4tT/52sMAQhOQ6W7q+UvhC3m7IGmeq2MnHIHz85BsS8I0VpiW1BRKYnquMcRkpB4/CvJbLmS069T7kkY4dPJR/N3SV7GuNtMlaaoU9zzmm86tosC64FTGPxlw/TIRKghK3uhZyoXUx3S9Yb6/0xGYsAwHy1VIqqCxzGFAmlZnU4HipdockwbKnETWPXCBdXlIdknJoakgG0qqQMww2nF2KqKyM97sGub0pkbOgdhPCxSfao/+yMHENGZmPzgVkn/S+6OnfQohyPIJUQM5fPrCDZZYzQy0PoBkyKGKt+ovvNkJyS5gHtkz1Md6UEE4IO9Lugvj2wUOc2hqorscBO6EixmQDRIYfJe0MBqua/kNzkU1gKRdCIm1GNzIUW+zMCTp5mF25yGUFPfpIQdhOFUeBdk2LdC4KeEPBxw+bmxhezNcwHpHv39eUtbBRJ7bYvZTZmleR+qbWrsr7+CUf1yfp4scrFsKqgJf1+ZF5dPDt65FS7HIww1/d46ub4Jh2ByOTJSxY3dl+h9N9emYYbq6dxITVsZRbfiPZrXWtrllFR2c7oekig6cpbjiOVj1hBxw74VXaexwwU2PZj5iF2tCdV/XAgJU2i6BdxLnGp/TLFcby6gnOcAhEOgxXUN73HhHGr3XtaSkKnwd6yxhganGeQZOs2Pa+7Jcoj/Uxm1f/vFY5c9CQRaUP84kcZjWDJxl/8NaCfPjAj3t77qZLNB5rTaeCuWBUujJ7LOTMwTaEe1KCuGJaJuUjxRW+0pHwY4ZyOkhsoa0ECz3N0uaBoGjnyur4KZcNsaai94yh8xytXcOy3c+BX1TDlohcrxeYkxy2HFGbrvOVFTgq53w0oeyZsgete8JEZGoM6P/LArCpinZdFNxhqikbhaxkZjSYvsNziwSfaZP6Vhzi64/t7MoGsvzLbGlf5zQgf1fR55udjBxzuBh4/hLGZDkx1vsrh6hrf2mJnhkrvqlOQrEnGzV09wk4dJBRK8Hhk+GSboIF4QN+ZqLRhW8dKsuCP5Fi9M1Puk05bPSbF95D2dbIroAd1XJN12qd6oP6q5AKFI6UqZ7gEyvcktTU7Mei65ECAhdfB+S83JAsLT8KuBRNKmhRGd5hqOTWuKQo85WL0hk8u1ugeJnjamMPU7jCaxLN7cbo2J7UJdjcJtb3Em8almdDJJ2Os83vWLmPiTOFGtmemsRG29w3lmdmVE3s4M1S5I5fIRxovqnsa/6GTSK/Hn4+iNbGTfZT5xGrimQG6/oYM9pERudZ1Hnuy5quZ5aMVn8656Z6k9WnsNVSabLkF7Yw9B0l3zGJPUZfMvqfN0l68R4O31ZoKm7KckFZoAYmwiIN4iWjTHmUrKHg9KS5pCvY/fCS3STq2sHd8nmC3guZxySPSPplSfW68crEo8wOGuDgUz30Rxezt6LStcrhJ6StKcQ79NpEFhhTJItcDJa3qBdrvZi0wL7kAGNj0sOwoxM68Y6OczxJXE+aiPTs0qU5HlloHSzTLC78/EiWihendjM/sOjMY9taLKfCYzdX3IlPXyW7/nNGZC+z4SpwVC2m7BYIVP82LMYLHuLYrMiOpezfkh+6imteyiJRUiQDt9rX8338wfofrV/H5uMhRDuCNHfaYLWqSO51sQk3e5mGJ7ARuCXlUhO2Obq2TNLSBpNV/Qsd81bMTvU0H4Okh6zgdCSGr1eHG8FUxB5sDuQ6GyfDdPdt6dmnWc6GjkjfPSdhUsYeCqCMdtXUNm606AWkl/uFbg49og63s4Ta7ELKRYLGFu/C/+iFXarS+elz9yItZF5hs9H1HHig6QKONyUQXHTBoqbCo8f7XVt5D+jaFnCUEZn+EiBUhG9L+M9gYlqdZhzuNKYh+Tdq6NyGtxD2g4+/ukLeYP9YrYgzSgcecJWHsa7GpiguM+Y3uUyHSteYkwPVmY6+IBD8qEqX4HkU0m+nFhQkHSZ6bUVgQIDdHZWlARryQFNu8FI4s+u+9qrrS1vZzfXdN+IrQzn3EFwKlSeNnmb8ObG1M7y/E5IJjc57aB8Nd/ZmejkjmLp5D2sk6Sz93C/4WC1P6muwBYrDz09FDcf0j5VoO5uHTMu642m21vBxD/1uvMhs0PgN0Ww0b3G+KvHnZZ5phoIR+OyKtVCPOJkI2DlRI8WbRWqO9aKO0HCGVGB9aV2EHjmlB/VVU6/D1jT7G+zqWG60JKSYyKCIr8zcM+uMKvfqyTKGac9WYj3pW6JyLDrdqYKybP02M839gqcnU/0hiN/vjHLhMrHtqP5CK8jkdU5wJiKfyTLVzjz27nSdCpFgfOtDTgQ3byCxs4TEQxbA32ZrsIVbKNwWnqCsRQ+XIO6R25l+jkkk44m0cFid+BVo9h+EfJow0Cyeyh/OeVo/iCbznDA+nw/hHSf6Z2lPv0IgwzWVau+RFKqj+mY55a/VG5hI9NLi2L5OFdR2Xp3vsYzemsxB3DE1Y15jBVZhDiilMaW/FOBc+kzHXtP4PJ8JoKR2IpPHhA+EmpJPVAV2bTuDtPVseMdoW9mPwFhnKH8hvQsMw1ufFV8vLXwr85djhhnj+cIVL4LHZWmFhpQ8zsQU208w3a5FzD/2W5UPKbpwPlXlOrO2upP5zzlQSDXnEjvsCqQkLCUKvzOdnEm0HBJjYVPp+PXtJUitMhbBUgHv4Wn9FhSCX0+czsbf5rxBjltM0jkam79hru9VQtcXuaQTEBDhbB4EUkJ9m3D/19OorIlp0auIEGOABRnQYCoa77Ip+GTGTOQZkPLk37nrRMuRusJbtk90VB2IgoVTkqwx0ogRGTTkDE1pa8UBEC91O/LAyK3dIjFWSbGlJkYHhZJifr/e9iOX4e3k3J7rJKzBJ5kIU5rTmxTQcNQChq1aWD3Ec9309Xk30JY3FySln7FLkd+oTH5tn0g3SuabDxZ8InhChWNCxxWpE5hyW2UVW1s8ygjtyu3ZX8JOLw1Flan3Nle5fBhsvDhtlKssGMmYAhfjjb8Wee1V12AsDkcVrAkHlx6GOJkjGk4F6QIPb7ETP0p0OrRfPv8N4d0/T08TLAER4uxfv5GSdKuc5WdQrCOkqR3MIFapEDgy8x667aZya3v69p0q8KBh2xYyqEgLV60oS8pGvyl/l06+KX+6AWUuuFjZR+a55FONCMPBh7bfbG3GVjd3qSq60NJpjpqKer6rZHBmdQ2t31g6EPThyTKAntNTadjVSJwmiP9KLcA73iVMvMa/7UICMT4vwmsWSunWnLtoIJk57IlBSrFu2sX5gLp5bX5ViMLdcZ207N0SuWF8CxO/fHiUxxHMkQIc4GrlpqOc+cI+yUsmkGwrYxl2fmMwBv8+ZOUf24BgfXMlXSVBxrfc1pBfTcxCY2eS6ZoWXIS/utGxhR/xqGnfsFiRWL/PY2xEzS1rT4I45GMncCqKv3Nz7RaPhuwi6P/orGUqZcWsXH8d/8tAcfMgIFQjbfs9lEehHkLrgYc+QiHy/LIlGpFuPUkp5iJZP6TYDvR+KH2Bs8i9FkJNEpqWyF0PGp0oAo5ruwZSUNIWWr+10UVuoLWArRqrLOMoxL5pJ7dJfqm+hspsFX7LsbHkcsR8GubYdSICHUCuQITWwZur5skDU8yJy+TWBMkISyAfWst2zQnHxT6ujcMzriSWvQs8Rx4LfDbl25PKb67x2Vujd/eaDu7WI9zayS2ZKmTHLmtjFdQddPeNR6rMujkovM1juU10pW1Xev/W+wvmKMSplqe7zpZLmrsOk0YcPvfX2tZwuNzRHlVJp5V5TjqXErB/CKMihSJmvyFFG6ymOfr6mfvqDZIkxBlU7ibyZXV2dhAkqtS7WL3uHKOGnvKzeVS6VUwc8mcNRqX1WFOP2vKrD4Tlh7G2eqy9UhZ3zxX8TsxjlOnYa9fmzsxgru3SF4g9TmaZiudZUaV2E9esLdk+ruJ87BbPPUNBc/aKwbigoNVI3MrbtTlmKFQTnLT6YOSzGkp77EjRLSkhIOtu5mTwyR4gpTAd+IX/Lv6L4PRnTvt+OOFl92L3HqTwcHM3b3dzzGC35OHi8GXnemHipOHX/Mpb6Z6M3eDg8luve5FlrZ/+wGVoIFK8cQ5ZVXZaivHc1YhydqACu+KBPjiQ8hLVRaL+TeTS/IitFCt6kDdoP1gPgCZ8n37SS3BzOAW0v4+0uVJwvnLpL4D7fwH9rUT1K/O2EKxiPPvvNFJ8UJbBTWD66NLcBHy3wTuWKJGkcfQowjAykHpWNOhe3xwMMvTNYn91LjbESsAZ9FbhrO3HpvZOFi8pX8n3it+myzOKDNv8zKDHCJ0HXpTAtiZDjeJJCgGCwai+LaKXCfzo6cm5vWQZ6yyv0NZUY2LJLrHlxPrj+nDrqKUMZ8AHMZkqDdYrgoVEfxvWwpwOqZ7/xjjsL1LpJ+32JDSJhkr0asaC0JbZU0Z7TWt+vliwHPBrMeEgTasEc2ez8e3XO51jnVM/nWhbxWqDQFWHAbjNXfAgVOwiW6jxp0HEQ4lhc03ls/7K6TFl5CLt1ComZE2XEO8Gaz0gvyd2eDA91rvNFx9cGBeemFKWee85wv3bTq+a2rROrl4YK1RyomPluO4ZTiGCvjh9NdGZNZ7XlxnZzncJKYB0ZIhFaBNZPc0v+qoO5upUwTsmV9yrSEX/DSz1Cvdz53F87Jk+Sh5biWPqW9gT6JEKaSAxkM6fNTtcBa7qLLmlwXt/yzYuun84jvdB/zZdpnLckShHaFy1SYwrRKtxbcg0CvS+IA1xmFybaXu3AmZrz66MWGGjq2i5D+dfUjtfUYGr7aqGoIeNfsC87J6qQ+rRiafsmMXZL4xcfWRGdq5g5IH/rqoh50kOtUJtzCGrHqt+V0GTafEJlaUZ5icBBHq9a84bJwWo7iK3I3YbKO+/SCdGXip71L/ztHnT0+vHjhk0zQ/ibP/0fP5SoWqtHdtup69nM+4tpI43KbQZlZXZCzddajnLSvRqNz8oq+DKo6GHR3gBngZG6AsEkq487Yym9OTpb9a9e+yIdkc3I1KQXEYReJbSMBEFiZ5W4QlbK9LK38NxcPzsPnYf15yti9EZIby9a7kLwtIrnPVka7gpwtlIrVXPglx7TUUoDbujzD62fWcgnA4RgRZWC+JXbT/hOnw2YWAlUjrIe/dumvrwYqAPs8zM66UZIKvn/HM/lBQtxtWU7pwc3NHoBSeK1aBj3fiLKTb5VMGKCfywN5T0AA0XNUEbSQ2f8D/29D+RODXEa/agp13LDrxP8HZZoKVn7yBHrNy4NTxjYfOblBX0NUoMcuQALlV0IOj9Pti4guAkQhdg572PO2Haz3lGuVVzws8ZSXNgYIH1X25GqhYIBYUQwYo2UvslQwpctVQsWX6HMb6gE0SyyFKniL8J8NCNWtg+j28JfsQ72cvyBvO8wZfbSm9CsZsha5AoHG2VNueb2lxyP8q1dLtl3tOcOVnYuUDImgqo1ynvNxAKnOSiuaSvKirwRuQRCavaFwbOI/eusF2GV6L8cietqi67ZsEBZiM8oCswO75jvkYPHM5NhoNzBTKz217fH1JJ0ibCXpOLGbZVs8A+CQMbqH7h7OODjEOHS0Z6D+FD03YKo/LCzZvCzWDLosUcheP079mQWNNplz/rN7dMIjT2egIW2z53w0WLoCVepR9j4aWlOxP4xRFmChX33I3rNxeTu4+bhvMcdW8t+WMTEIP3/EM6mawe+5o63j96ZMxrmm/cujrEBl6QbgLiPzPLdXT7ECom3mvnmroX9BQHNHItrey4rsWt7/PE1BDqx9m31gfFltS29lkEZQJa/xjWQaQTiBfIk83QKWObo6l0CBSbS1o2Et+QL6ev3KexbZFlaecd/88OTJFmkcFmMOIeBtmeZR52DCcWsdKQCH614bkxtksxsgBecClsJon3VW0P2ZVdMFB/330BBSjSNKwLrjI1qElRUHSQh5hKBLv3zCkB9i1bbSSFWdjvT/piE6QYsOdO6A7rbiwsY5lRvlsTNquFSTacNoGlXvB0g3nqlkxKMfb2z9C+YM+O/JJb+/t9k7CcJoHI66DSARUynOLWEqpkkNlvtgX2cMWFtTlPrKU7XbtaLcGNv9FMUBOsu/HBqv5B+ajvb/PYiWygI4P47SrDU9RVB3L01WA1c7Pukd4nAiszrPx8Cz6foHa0/EUlwDI/OjqxA0zpHOh5M8+fUjtBcK1vzEg5HsPPhP7IpVoh2SM1Y4ksw17Fg1KigdCbLouG1NTtvAgoZqnYPvgXlU8yNLmFGh2nvfF0PEcJ/Rlap3j22imFHiM4A7ZnttLmvjQMW/Fm2ivmz7QtzN3Od8HtQXgzudsnfRfgst3VIWOzOt607ZycsFi1zbOVSmhL9+dA5yHCHqGGokk8GktTMmjQLGD89Ke3D213Z+bO9IYQ9xevzzPH0LiATTYQ//nUmfHuwUrr8zJ0+44qWIjuep3oK0pcLmdizO8h8rxcQCmMg9CO8GDWpxo2HajytHBOEQWCL0oJlKo2i40GzeAA0+yilo+LV78TCf7V1cf87PWbj0cGh3OjPIVsvfCSYq8kFU43rnTR8EkEr0Xfwh1lxJHulLBikowlPmgYxIsUU4eXOoF8DfCZhj1CjWMDFTcKzArB5y7iRxCUHRN8anzk9mr5xG1pb4rMEPI1aghIB4kpsRZYuZlHy/blDR/cq09HGNNzyzMfvjQ9ggO/IVC5+sBaj8hK84SBT5Y531ovswBGgrF9GE1NAcV58z3iHDHzHvr/0iP2n1VivWHSBoCM4g8IsfSRkmnNzNtOacZUYMrnxyOTisR4/pwDjI+RqoAtLkfW7qnmrs/NndPeWSOVI4AqyFUH8qKZ79EIn4YKGZhnCzDPTeVN8yUL44X/ieKhr4NWFCQC/PM4E+r1JKlbxe2P432arU9aDtSTzPmtG9/wf3n5N8CgAKolGQLZBSD6MSaEyo5zo9QSx0DRoUckt7TGm/rFATCBg1SdzaF4Nsiq9GVRK8v5NCpLpqqvTIGjAttUGR9khuKsks01e4uzEOAhMDF5Vihsz3JKlIO1juRvJ8YijVDPZAGCN9gD2IFMq79VBjmACaCzgtzGA/kKabBRXVWSmYFQLwXnkVoTN4xoswsYc/zosdtwPMt2rfFLuuJ+3130SPZI7dHDolPHZMSgJXEGBtNmUcxakHie1+3dQGNP5qeAGQ9ihYS5L1HfohaZkZ5VzypnbbIrkarkN5e2wH6LXbYWfNK+cY3oD315SZESQqSHD8OXEwo11o4BOWegAVn/zuEJWoYaBUulOCcQ4FO/wEeX0U7i+LgOUzbPEVPs+C9vUffl/TpZ0GzSq18EdbxzkGiksf9putdD+zg1sB8ESHzDnQHowM6enXfuDwl1J9CXRMVEj4rPz7t5PelD9DeCzY15daxp8kohT/Q/imwgXlvFZxoASX0E9EKtx7DevyRZW3llCKkTO54URMCQh0qDtbHnMwXmHwO9oNDVhv53uzw/z5u4d3KyQpgaML0LpPBFD+KvBSxcI3topVzbDSXDmoI18Ail1SE4e1BUpPAVVBMim8NWc/rNRpR8WZ8HI1Ki7MNImGKH2QH1fH6voZk8EKY2SdqZBly4ZUychy4v6W6TRETo8SPx3fFxPjOg41GBZ45gVcaDOaFuXq9F37MDe9p0HstSIiJ6aodwHsFeWYKeLlKZa5SLZUBn6mOC1DB0Xjq+0KzXahds1yPq84uZYihyUDSCsKSNyVtgippOpTgGCuHYPSHRUZih7yDkOFLFGYA3NhcgBHC/zGXg7SkQbLdWIVHCptQEsWJdvbReaRGe2rdrBJSesrrYtoZVIF7zpok+hwHQZbLfKOzX7goNdrjbzcVL21uZafFinBxcSRH63PeTSdlu7rSVVJ/0C9ELkH0oJcgnix7DAJMGY83bfpVFP2f1tb+ppbBltYjn+cwIhNzAW1Ci08xfP1ZB8JbpAxIIQg3RfeY9WFcB7AsUSzdEbYiWl5kb+fGLCE78drnfNJ6hCndsxvcSdALCaqHxcSNeJG5IPtVL/Xh3gtmuDMfzlu4tH15HpzfCZtbb3WWB2YMFD/oK/6r02knCFrj7ASqR4VtCInm9KeYvc5zkyrBd/g6WmDPCrdJx2XhbAmEgsp2TZCl0IHhAIQn9xiSlhuSdxmSl+N+Sz+nP5p+VA8yLdE16LyesYx6FitEZ3EqrDe7ajSTs+U3SsjjHjAprzFtFuoornMytUnRuVYQ3Y91GioQUHm6ACz/kQtgLoUDElbQpByCiz0G2UFFEz/QycGN3hiBhpodyJO63fg7+l6hlgwqiOhJhpN5R5IV5lk2B6vsi4wu01j/QaTaR9wdTj6/mwBGyMRIfdVQWVnhIXKnUiTrpMhQsF2Vvacd6QXeeyV5pQr/AsqXkavywfT9QuAC5tb7MBwoJym+ckeji63otV7sPg2eHghFN6P/lhKKCZtJQF3FnMf5ImKdbz0RPGTmw/UFcF778oVL8+D8erJ574WH1N4Htzr3HXxei9QiOUpcsMxGUTyigwVFp5x6LMHZdJDvl+dBH7VIR+x+DC/hJOTdNbf3yl1wKisgHiGi4D6EG7Q/IyQGU8iA71+0A7+TCjf6+qWUAbJcSh/uWb1Q7wJpn5++ckvVYQASm1DCWbyV1V6p8Awc5uk7wst2TJ8cmNskx5IK9HlnLTH5LLLiJfqJXBTXa8qxyTnvkjg0B0ZbtmpbtNQFzUUJ0KT4zTD7JCZ8QDYy3sSEziGaE+X5I0eulvHyA9LKPZXViMVyuC1bQ9rfxRNM1n6q4V8og5QTOce73iGz34LayvBsCcGajrJJpNj4DnSsxi8fUh0+u1Bb4W0RP0estWIqgc/9HJPYT1bTgYfv6yLpY0wENZNvxN8krODFd0CS+98fS7ESVKz7UIWncIdQLSMCBTdYXcxZ4Wyx8cX8k0QktEH8gRXSMiaEOoETJNeg7OmKpELn6/G2XLJ/4irVU4rxmiD9WFiAglwoxc0FnHhvzAzvPrVs+TPKcFtfmJx0gnSIEM02YJbtkoeWpNgthkE2/leNiqdekqilScrvFzLCQ0qqG+99ksxyhgdeAnjeyKZuliJLrpnh+HqyubyistLa1hXAZlNERYWZsP///TDaDN9lZflMMzN/WAJgnjo7s+DoULd3tEvsBqzTA1sS2TWuLL15oH9lwAJhdAkenmpLjejVlw5kH4gopK+YCHm5M9ALLzeVg4aj5Afke3UxywWZE2RdKrRXYqL4j/ASzHfkQAJOfpCc4tLhsdIhabhOgX8zGaPNPuW0wM/PJf66N1bPAyA5iU/LtkIbdiysrzuzCF1IQCywz7Ab6399ECxHx3g4iT/jY7jUkbVqgZhyHz/Gv6r84xf2lzERKMD149rzFuU9qkno880IZXvu31ZYnl75AsImmcaiCBjj5vgE1VigMwy9rR6nKhV5ZoYhx4Tir2a2GaaIFAJuV24/GVYfdHvtslZ9kNP+Hr4wlaJJz1ZtO+WDticE7asxnhba2fim+es1AnF6UY5627FwvPcjZnhIjluCiDSjnU4TiQSZIk/uIURN9e2jQfOWKZ3fDzFQmAjSZlZITgyuYNHjgwms/6EIZfGn8wf8QKqZ3H9Zk1Kve0rxewH4KxqiRG28x15a4laTMTYDqN+QAwgQvBCdTQRJsZ6u8T0EGd48KeO0/vsWcp5v4eDpRGZOjV1PeECiT3BMpYlo3X7ymZZ4ZFHbt7QVVjeMlWWaxZKAyrtyD/4HJxxSLrbfBjrNOoMrHE9DoAMIH46cDOw4IZEoPgnGjkmGDhRNHYrrEwiDayCC63wIfdemIlZb96CU/d/I1UiknJ8CLlF6YpgxPRTEF0jyDVFNF9+Exa6BUymMopHB3c/ClV+bu4slkd8XY3iNNyBv7p/iTU1/DBKdQ9S3Y10LGx/sJDjLVSDVOsh9eAcwMTqggQ9qYUxKiyVRxLPGw08ARLHiCpvi8U1YxZPwp77NGivfRxj3fGa1q2YmPixoW1yOM+6lmwTRuPTzzJ0ksSz0IWHPTONaD4Egf3ZqOsAjLMAfezNK4fm5J3n44i6kbfbpHjiRc2x4sfRABuUo5VS2JDUsYVuwOf9kuT003sLyO7/tzlH39Sf6Z+T28vM2ECLFk2YXQXfmaG0aMCiPu3RAa5ROoHM0MAFEiBPYPCpvR7ctA4lTk/C6c4wNYYETpL0KsWkvWDJ81VVzsk2N9BjlVc7IqcEnkLBQx6fCNjDOrYOfgd0TrVGIhqDkdw8Q+zim/ifcdTvQ7fi/0TozIQADJbg1+LT7KqyJxv/hiQ03ku10f2KsHC4okviqo/gMO6JdBv6MgDaKX08UZhD6PKJN9ltwljZnaVpIWC6JnnfwbOSB04tURSLwNg2qh95K4XL4Lrmc7Pb1JVwDoTaLdgQZgpx3IbeRakiECGG4JlOyUbhuja8pH7wS+Eq87DHmoo7MlO7WBOzKb2+VhPl0jmYZjaOZWTS6CLkA5O0HT7ss+f5Z6wnxpqvqkoxbJnaCca573gneWyvTbuR9YtxJwK5P/kgIdtbcfoYGze8s1037az8L2Cc+7ztbuxaeyuyJxCW1Cr/2/y6TGDpJn1q22WIbBQFku7Di10oaI/KOO80KXrI/e1Ft6CKE/e67ILGIrsOPsh+3qzNI+/+TOHaf9qoX6QjQqHDv0NYV8yBik2ppgCZogi6Tbdq3XUI3C7bu/9p4ISbZDP9Q6Fu2euv3P383Bt6PXouKUHjQZhK/WVImUXUBtG+QtVkhhLVfe3LtBPs99r7CWF14+YM9ZxnPwGAg6ktR+Gub10gyf57uCxZA3rokQWSlpQL2Y91d4ZTD1jdKIdD/Z2hFWLQI80o2RBd6Pcj4ra+Te1MnFMJuOBPA336s7XVBYjvePl1iFUkCXbtEMuvbectzl7L2UFvSvy6z6g2gJivmWbGvOcKRbKoS63Of1tW/5dzQSe4aPDTaGYPdo+jT93qtEy5RIf/rMopR/g3cgwq6d/GuUxBFZIRnLcdE1c9ITVZ0IiFZ2fCr7RnGZF2G3Iv2KGmiA6rEbYZf9kwCOZ+lMUkbHlLvHna9EF6T2th3KwO54MP92s7s5PUhNK0BFoCw+m9pDWcIQf+BNV8AeP5CX4Npb/EEd+JtBPBEQSYxWyeI9JVRbmPxxGOdy2UKSp9y9V9WSSDxhrAXJjkY79j4bSRWQr3DMrZHRhLGkjnqwTtbUniCnBzQRXzXIagfORGRi4dWX3IKwfcj+wIw8iaSIkAKW/nAKyXFzvEsQvjLIWw5gg6T54FdIZlvyLxPUil2i8g8BPIWtM6ROUh0S8jqImsEuwBuncMuhiwYy2kIncduLaw5R6kPqYLrPDk6n6FIkPOxO0JcC3fTaULgr54Uuw89b3SfoluPnDXRfiIRIpFgFweTSCQ5MjghchZE5wp2FtDtQfYcmhXguEShcdfvsJqHoFEwcodmMXY1ZlbMsOsockgi4vsSq/sSWg3Int6KiLzKqSFx+8bwEIyUR7FL3BsVtwVEmSiWyVcPLPNoCiI6HPF6C3CV3DE4W0bU75KehvEZmF4uVRHCWg5/8dtmEy8egnwhydbpRxrSnLut5BrCXimcLQ+OVkMYRFcTt7aJ7fV9JuUM02Q+pflYwpWwoH2w+3rBRCHsnbwcToBBTEhI35jOSw2HN784XSn2IYn2sYj1qNgIine5H4ViZkkLoF4F77wkRaJuCW/zmN5SAX6QtFMY6H99BfM5Ph1LoWDxii2IhgyiXCq2NToO9WSCFeJ4vX7OuYISIZTDJYo/+yWGRpmHO8wSN6JRl7gTjBf5WwmYUnOEKgTgnlgtR5Uil2qc+W5U0xxD5SkqoKSeWtSBiYpIyvJlmTzxildJqNx1uXhUkvSQMnRq2XCZ6Gpeo8fzik8uFwB353AXWEmyN8jjoFhXFqg1hzp2laSrQrkKje55Qaum5iIih7NWNdfNsbkLlDnFPB5aSaUdGrs5CuG6kb3IJs6Ie17vAwrRI6/uAarTlBsdtYXLJabjpawTc+H5b+FhyXGDdggZVa6f3Vnj3v1SonjhjQ+++OFPAIFAkIAhQ4GKHfbQoMOACQs2HLg4wIOPAEecECLCGRdcESMZz+rfgwcyPPHCGx988cOfAAIJQk4wIYQKE05BSUVNI4KWTqQo0WLoGRjFMoljFi9BoiTJUqRKky5Dpiw7LdJu1DrPdVhmic322zUr1i202r/+s9R6Xc77wwdbHPDJR9N2OOSqyw7LlmOFXNflueKa22646ZYX8k26Y9wRBd5b6Z4pdxV65Y1uxYqUKDVHmW3KVapQpVqtGnXqvdSgSaNmrVqM2G6uNvPM99pbJ/2i34D7HnrgqEHHDbvgmCEXdepz2hk/z5oN7z5q/4qkC2Xe4IUprf/GmTzibPvXeikAAA==) format("woff2")}
+  :root{ --bg:#0e0e12; --panel:#17171d; --line:#2b2b36; --pink:#ff5fa2; --teal:#5de0c8; --yellow:#ffd23f; --ink:#ffffff; --muted:#a9a9b9;
+         --display:"Lilita One","Arial Rounded MT Bold","Segoe UI Black",system-ui,sans-serif; }
+  *{box-sizing:border-box}
+  html{color-scheme:dark}
+  body{margin:0; font-family:"Segoe UI",system-ui,-apple-system,sans-serif; color:var(--ink); min-height:100vh; background:var(--bg); position:relative}
+  body::before{content:""; position:fixed; inset:0; background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22460%22%20height%3D%22460%22%3E%3Cpath%20d%3D%22M33%2060h14M40%2053v14%22%20stroke%3D%22%235de0c8%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3Cg%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22110%22%20rx%3D%227%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%20150%20110%29%22%2F%3E%3Cpath%20d%3D%22M156%20108V84q9%203%209%2012%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M293%2040h14M300%2033v14%22%20stroke%3D%22%23ff5fa2%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3Cg%20stroke%3D%22%23ff5fa2%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%3Cellipse%20cx%3D%22400%22%20cy%3D%22150%22%20rx%3D%227%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%20400%20150%29%22%2F%3E%3Cpath%20d%3D%22M406%20148V124q9%203%209%2012%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M83%20220h14M90%20213v14%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3Cg%20stroke%3D%22%235de0c8%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%3Cellipse%20cx%3D%22230%22%20cy%3D%22260%22%20rx%3D%227%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%20230%20260%29%22%2F%3E%3Cpath%20d%3D%22M236%20258V234q9%203%209%2012%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M373%20300h14M380%20293v14%22%20stroke%3D%22%235de0c8%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3Cg%20stroke%3D%22%23ff5fa2%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%22380%22%20rx%3D%227%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%2060%20380%29%22%2F%3E%3Cpath%20d%3D%22M66%20378V354q9%203%209%2012%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M203%20400h14M210%20393v14%22%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M423%20430h14M430%20423v14%22%20stroke%3D%22%23ff5fa2%22%20stroke-width%3D%223.5%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%2F%3E%3Cg%20stroke%3D%22%23ffd23f%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20fill%3D%22none%22%3E%3Cellipse%20cx%3D%22320%22%20cy%3D%22420%22%20rx%3D%227%22%20ry%3D%225%22%20transform%3D%22rotate%28-20%20320%20420%29%22%2F%3E%3Cpath%20d%3D%22M326%20418V394q9%203%209%2012%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"); opacity:.28; z-index:-1; pointer-events:none}
+  header{text-align:center; padding:26px 16px 6px; position:relative}
+  .logo{font-family:var(--display); text-transform:uppercase; line-height:.88; margin:0; letter-spacing:.01em}
+  .logo .w1{display:block; font-size:clamp(52px,12vw,98px); color:var(--pink)}
+  .logo .row2{display:flex; align-items:flex-end; justify-content:center; gap:.18em}
+  .logo .w2{font-size:clamp(24px,5.5vw,44px); color:var(--yellow); transform:rotate(-6deg); margin-bottom:.12em}
+  .logo .w3{font-size:clamp(52px,12vw,98px); color:var(--teal)}
+  .tag{margin:14px auto 0; max-width:520px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; font-size:clamp(13px,2.4vw,16px); line-height:1.35}
+  .tag b{color:var(--yellow)}
+  header .mic{position:absolute; right:max(8px,calc(50% - 420px)); top:34px; width:64px; transform:rotate(18deg)}
+  @media(max-width:720px){ header .mic{display:none} }
+  main{max-width:860px; margin:0 auto; padding:14px 16px 48px}
+  .card{background:var(--panel); border:3px solid var(--teal); border-radius:26px; padding:22px; margin-bottom:20px; box-shadow:6px 6px 0 #000}
+  #screenGame .card:first-child{border-color:var(--pink)}
+  h2,h3{font-family:var(--display); font-weight:400; letter-spacing:.02em; color:var(--yellow)}
+  h2{font-size:28px} h3{font-size:24px}
+  .hidden{display:none !important}
+
+  .btn{font-family:var(--display); font-size:19px; letter-spacing:.03em; border:0; border-radius:16px; padding:12px 24px; cursor:pointer;
+       background:var(--pink); color:#15151a; box-shadow:0 5px 0 #b23a72; transition:transform .06s, box-shadow .06s}
+  .btn:hover{filter:brightness(1.06)}
+  .btn:active{transform:translateY(3px); box-shadow:0 2px 0 #b23a72}
+  .btn.mint{background:var(--teal); box-shadow:0 5px 0 #2f9784} .btn.mint:active{box-shadow:0 2px 0 #2f9784}
+  .btn.yellow{background:var(--yellow); box-shadow:0 5px 0 #b08a00} .btn.yellow:active{box-shadow:0 2px 0 #b08a00}
+  .btn.alt{background:#2a2a35; color:#fff; box-shadow:0 5px 0 #08080b} .btn.alt:active{box-shadow:0 2px 0 #08080b}
+  .btn.small{font-size:15px; padding:8px 15px; border-radius:13px; box-shadow:0 4px 0 #08080b}
+  .btn.small:not(.alt):not(.mint):not(.yellow){box-shadow:0 4px 0 #b23a72}
+  .btn.small.mint{box-shadow:0 4px 0 #2f9784}
+  .btn:disabled{opacity:.35; cursor:default; transform:none; filter:none}
+  label{display:block; font-weight:800; margin:12px 0 4px; color:var(--teal); text-transform:uppercase; letter-spacing:.04em; font-size:13px}
+  input,textarea,select{width:100%; padding:12px 14px; border:2px solid #3a3a48; border-radius:14px; font:inherit; background:#0e0e12; color:#fff}
+  input::placeholder,textarea::placeholder{color:#7d7d8e}
+  textarea{min-height:110px; resize:vertical}
+  input:focus,textarea:focus,select:focus{outline:none; border-color:var(--pink)}
+  input[type=range]{accent-color:var(--pink); border:0; background:transparent}
+  .hint{font-size:14px; color:var(--muted); margin:4px 0}
+  .hint b{color:#fff}
+  .msg{border-radius:16px; padding:12px 16px; margin:12px 0; background:var(--yellow); color:#15151a; font-size:15px; font-weight:600}
+  .msg.err{background:var(--pink)}
+  .msg.ok{background:var(--teal)}
+  ol.steps{padding-left:22px; line-height:1.6}
+  ol.steps li::marker{color:var(--pink); font-weight:900}
+  code,.uri{background:#0b0b0f; color:var(--teal); border:1px solid #33333f; padding:3px 9px; border-radius:9px; word-break:break-all}
+  .controls{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:14px}
+  .row{display:flex; gap:14px; flex-wrap:wrap}
+  .row>*{flex:1 1 180px}
+  .bar{height:16px; border-radius:99px; background:#0b0b0f; border:2px solid #33333f; overflow:hidden; margin:14px 0}
+  .bar>div{height:100%; width:0; background:linear-gradient(90deg,var(--pink),var(--yellow),var(--teal)); transition:width .2s}
+
+  .counter{text-align:center; font-family:var(--display); color:var(--yellow); letter-spacing:.08em; text-transform:uppercase; font-size:16px}
+  .stage{text-align:center; padding:14px 0 10px}
+  .eq{display:inline-flex; gap:6px; align-items:flex-end; height:64px}
+  .eq i{display:block; width:12px; height:12px; border-radius:7px; background:var(--pink)}
+  .eq i:nth-child(2n){background:var(--teal)} .eq i:nth-child(3){background:var(--yellow)}
+  body.playing .eq i{animation:bounce .8s ease-in-out infinite}
+  body.playing .eq i:nth-child(2){animation-delay:.15s} body.playing .eq i:nth-child(3){animation-delay:.3s}
+  body.playing .eq i:nth-child(4){animation-delay:.45s} body.playing .eq i:nth-child(5){animation-delay:.6s}
+  @keyframes bounce{0%,100%{height:12px}50%{height:60px}}
+  .status{position:relative; display:inline-block; margin:18px 0 8px; padding:12px 24px; background:#fff; color:#15151a; border-radius:24px;
+          font-family:var(--display); font-size:clamp(20px,3.6vw,30px); letter-spacing:.02em; line-height:1.2}
+  .status::after{content:""; position:absolute; left:34px; top:100%; border:11px solid transparent; border-top-color:#fff; border-left-color:#fff; margin-top:-2px}
+  .whoami{display:flex; align-items:center; gap:16px; justify-content:center; margin:22px 0 10px}
+  .whoami img{width:76px; height:76px; border-radius:14px; border:3px solid var(--pink)}
+  .whoami .t{font-family:var(--display); font-size:28px; text-align:left; line-height:1.1}
+  .whoami .a{color:var(--muted); font-weight:700; text-align:left}
+  /* de songtekst als speelkaart: zwarte bovenhelft, turquoise onderhelft */
+  .answer{max-width:580px; margin:16px auto; border-radius:20px; overflow:hidden; text-align:center; border:3px solid #000; box-shadow:0 0 0 3px #2b2b36}
+  .answer .top{background:#000; color:#cfcfda; padding:14px 20px; font-weight:700; font-size:16px}
+  .answer .bot{background:var(--teal); color:#0b0b0f; padding:22px 20px; font-family:var(--display); font-size:clamp(24px,4.2vw,36px); line-height:1.2}
+  .players{display:flex; gap:12px; flex-wrap:wrap}
+  .player{flex:1 1 150px; background:#0e0e12; border:3px solid #000; border-radius:18px; overflow:hidden; text-align:center; box-shadow:0 0 0 2px #2b2b36}
+  .player b{display:block; background:#000; color:#fff; padding:9px 8px; font-family:var(--display); font-weight:400; font-size:18px; letter-spacing:.02em}
+  .player .score{background:var(--teal); color:#0b0b0f; font-family:var(--display); font-size:40px; line-height:1.15; padding:4px 0}
+  .player .pb{display:flex; gap:6px; justify-content:center; padding:10px 6px; background:var(--panel)}
+  details summary{cursor:pointer; font-weight:800; color:var(--teal)}
+  small.credit{display:block; text-align:center; color:#7d7d8e; margin-top:6px}
+</style>
+</head>
+<body>
+<header>
+  <svg class="mic" viewBox="0 0 64 120" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="4" width="36" height="42" rx="18" stroke="#ffd23f" stroke-width="5"/><path d="M14 26h36M14 36h36" stroke="#ffd23f" stroke-width="4"/><path d="M10 52h44" stroke="#ff5fa2" stroke-width="7"/><path d="M20 58l8 54h8l8-54z" stroke="#ff5fa2" stroke-width="5"/></svg>
+  <h1 class="logo" aria-label="Finish the lyrics"><span class="w1">Finish</span><span class="row2"><span class="w2">the</span><span class="w3">lyrics</span></span></h1>
+  <p class="tag">Het liedje stopt vanzelf… en <b>jij</b> maakt de tekst af!</p>
+</header>
+
+<main>
+  <div id="msg" class="msg hidden"></div>
+
+  <!-- 1. Koppelen met Spotify -->
+  <section id="screenSetup" class="card hidden">
+    <h2 style="margin-top:0">Eenmalig: koppel Spotify</h2>
+    <ol class="steps">
+      <li>Maak (met een <b>Spotify Premium</b>-account) een app aan op <b>developer.spotify.com/dashboard</b>. Kies bij "Which API/SDKs" zowel <b>Web API</b> als <b>Web Playback SDK</b>.</li>
+      <li>Zet bij <b>Redirect URIs</b> precies deze link: <div class="uri" id="redirectUri" style="margin-top:6px"></div></li>
+      <li>Plak hier het <b>Client ID</b> van die app:
+        <input id="clientId" placeholder="bijv. 3f9a…" autocomplete="off"></li>
+      <li>Log in met het Spotify-account dat de muziek afspeelt. Staat dat account niet op jouw app, voeg het dan toe onder <b>User management</b>.</li>
+    </ol>
+    <div class="controls" style="justify-content:flex-start"><button class="btn" id="loginBtn">🔑 Inloggen met Spotify</button></div>
+    <p class="hint">Je wachtwoord gaat alleen naar Spotify zelf. Alleen de spelleider logt in; de deelnemers hoeven niets.</p>
+  </section>
+
+  <!-- 2. Playlist kiezen -->
+  <section id="screenPlaylist" class="card hidden">
+    <h2 style="margin-top:0">Kies jullie playlist</h2>
+    <label for="playlistUrl">Link naar de Spotify-playlist</label>
+    <input id="playlistUrl" placeholder="https://open.spotify.com/playlist/…">
+    <p class="hint">Delen → Link naar playlist kopiëren. Spotify geeft in dit type app alleen de nummers van playlists die <b>van jou zijn of waar jij medewerker van bent</b>.</p>
+    <div class="row" style="margin-top:8px">
+      <div><label for="setLead">Hoeveel seconden luisteren vóór de stop?</label>
+        <select id="setLead"><option value="6">± 6 seconden</option><option value="10" selected>± 10 seconden</option><option value="15">± 15 seconden</option><option value="25">± 25 seconden</option></select></div>
+      <div><label for="setLines">Hoeveel regels moet je afmaken?</label>
+        <select id="setLines"><option value="1">1 regel</option><option value="2" selected>2 regels</option><option value="3">3 regels</option></select></div>
+    </div>
+    <div class="controls" style="justify-content:flex-start"><button class="btn" id="loadBtn">🎶 Playlist laden</button>
+      <button class="btn alt small" id="logoutBtn">Uitloggen</button></div>
+
+    <details style="margin-top:18px">
+      <summary>Lukt de playlist niet? Plak dan zelf de liedjes</summary>
+      <p class="hint">Eén liedje per regel in de vorm <code>Titel - Artiest</code>. De app zoekt ze zelf op in Spotify.</p>
+      <textarea id="pasteList" placeholder="Titel - Artiest"></textarea>
+      <div class="controls" style="justify-content:flex-start"><button class="btn alt" id="pasteBtn">Zoek deze liedjes</button></div>
+    </details>
+  </section>
+
+  <!-- 3. Laden -->
+  <section id="screenLoading" class="card hidden">
+    <h2 style="margin-top:0" id="loadTitle">Bezig…</h2>
+    <div class="bar"><div id="loadBar"></div></div>
+    <p class="hint" id="loadText"></p>
+  </section>
+
+  <!-- 4. Spel -->
+  <section id="screenGame" class="hidden">
+    <div class="card">
+      <div class="counter" id="counter"></div>
+      <div class="stage">
+        <div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="status" id="status"></div>
+      </div>
+      <div id="whoami" class="whoami hidden"><img id="cover" alt=""><div><div class="t" id="songTitle"></div><div class="a" id="songArtist"></div></div></div>
+      <div id="answer" class="answer hidden"></div>
+      <div class="controls">
+        <button class="btn" id="playBtn">▶ Speel liedje</button>
+        <button class="btn yellow" id="pauseBtn">⏸ Pauze</button>
+        <button class="btn mint" id="revealBtn">👀 Toon songtekst</button>
+      </div>
+      <div class="controls">
+        <button class="btn alt small" id="prevBtn">⬅ Vorige</button>
+        <button class="btn alt small" id="rerollBtn">🎲 Ander moment</button>
+        <button class="btn alt small" id="contBtn">🎧 Luister verder</button>
+        <button class="btn alt small" id="nextBtn">Volgende ➡</button>
+      </div>
+      <div class="controls"><span class="hint">🔈</span><input type="range" id="vol" min="0" max="100" value="80" style="width:160px;padding:0"></div>
+      <p class="hint" style="text-align:center">Toetsen: spatie = afspelen · Enter = songtekst · pijltjes = vorige/volgende</p>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">🏆 Scorebord</h3>
+      <div class="players" id="players"></div>
+      <div class="controls" style="justify-content:flex-start">
+        <input id="newPlayer" placeholder="Naam deelnemer of team" style="max-width:260px">
+        <button class="btn alt small" id="addPlayer">+ Toevoegen</button>
+        <button class="btn alt small" id="resetScores">Scores op nul</button>
+        <button class="btn alt small" id="backBtn">Andere playlist</button>
+      </div>
+    </div>
+    <div id="skipped" class="hint"></div>
+  </section>
+  <small class="credit">Muziek via Spotify · Tijdgesynchroniseerde teksten via LRCLIB (community-database, niet elk liedje staat erin)</small>
+</main>
+
+<script>
+/*LOGIC-START*/
+const STOP_MARGIN_MS = 300;   // pauze iets eerder starten, want pauzeren kost even tijd
+
+function parseLRC(text){
+  const out=[]; if(!text) return out;
+  const re=/\[(\d{1,3}):(\d{2})(?:[.:](\d{1,3}))?\]/g;
+  for(const raw of String(text).split(/\r?\n/)){
+    const stamps=[...raw.matchAll(re)]; if(!stamps.length) continue;
+    const line=raw.replace(re,"").trim();
+    for(const m of stamps){
+      const frac=m[3]?parseInt(m[3].padEnd(3,"0").slice(0,3),10):0;
+      out.push({t:(parseInt(m[1],10)*60+parseInt(m[2],10))*1000+frac, text:line});
+    }
+  }
+  out.sort((a,b)=>a.t-b.t);
+  return out;
+}
+const norm=s=>String(s).toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,"").replace(/\s+/g," ").trim();
+
+function cleanTitle(s){
+  return String(s).replace(/\s*[-–]\s*(remaster|remastered|live|radio edit|single version|\d{4}|version|mono|stereo|from|bonus|deluxe).*$/i,"")
+                  .replace(/\s*[(\[].*?[)\]]/g,"").trim();
+}
+
+/* Kiest een stopmoment: de eerste ontbrekende regel begint direct na de stop. Refreinregels (komen vaker voor) wegen zwaarder. */
+function pickStop(lines,durationMs,nMissing,leadMs,rnd){
+  rnd=rnd||Math.random;
+  const idx=[]; lines.forEach((l,i)=>{ if(l.text) idx.push(i); });
+  if(idx.length<nMissing+3) return null;
+  const counts={}; idx.forEach(i=>{ const k=norm(lines[i].text); if(k) counts[k]=(counts[k]||0)+1; });
+  const cands=[];
+  for(let j=1;j+nMissing<idx.length;j++){
+    const sung=idx[j], nextEntry=lines[sung+1];
+    if(!nextEntry) continue;
+    const stopT=Math.min(nextEntry.t, lines[sung].t+7000);          // einde van de laatst gezongen regel
+    const m1=lines[idx[j+1]], mN=lines[idx[j+nMissing]];
+    if(stopT<20000) continue;
+    if(durationMs && stopT>durationMs*0.85) continue;
+    if(m1.t-stopT>4000) continue;                                    // zang hervat vrijwel meteen
+    if(mN.t-m1.t>12000) continue;
+    const missing=[]; for(let k=1;k<=nMissing;k++) missing.push(lines[idx[j+k]].text);
+    if(missing.join(" ").length<10) continue;
+    const chorus=(counts[norm(missing[0])]||0)>=2;
+    cands.push({j,stopT,missing,w:chorus?3:1});
+  }
+  if(!cands.length) return null;
+  let tot=cands.reduce((s,c)=>s+c.w,0), r=rnd()*tot, pick=cands[cands.length-1];
+  for(const c of cands){ r-=c.w; if(r<=0){ pick=c; break; } }
+  // startpunt: begin van een regel, ongeveer leadMs vóór de stop
+  let startMs=Math.max(0,pick.stopT-leadMs);
+  for(let k=0;k<idx.length;k++){ const t=lines[idx[k]].t; if(t<=pick.stopT-leadMs) startMs=t; else break; }
+  return { startMs, stopMs:pick.stopT, resumeMs:lines[idx[pick.j+1]].t,
+           context:lines[idx[pick.j]].text, missing:pick.missing };
+}
+/*LOGIC-END*/
+
+(function(){
+  const $=id=>document.getElementById(id);
+  const LS=window.localStorage;
+  // Wil je het Client ID vast inbouwen, vul het dan hier in (dat is veilig; het is geen geheim):
+  const DEFAULT_CLIENT_ID="";
+  const REDIRECT=location.origin+location.pathname.replace(/index\.html$/,"");
+  const SCOPES="streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state playlist-read-private playlist-read-collaborative";
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const getL=(k,d)=>{ try{ const v=LS.getItem(k); return v==null?d:v }catch(e){ return d } };
+  const setL=(k,v)=>{ try{ LS.setItem(k,v) }catch(e){} };
+  const delL=k=>{ try{ LS.removeItem(k) }catch(e){} };
+
+  function msg(t,kind){ const m=$("msg"); if(!t){ m.classList.add("hidden"); return; } m.className="msg "+(kind||""); m.innerHTML=t; }
+  function screen(n){ ["Setup","Playlist","Loading","Game"].forEach(s=>$("screen"+s).classList.toggle("hidden",s!==n)); }
+
+  /* ---------- Spotify-login (PKCE, geen geheim nodig) ---------- */
+  const clientId=()=>DEFAULT_CLIENT_ID||getL("mhla.cid","");
+  function rand(n){ const a=new Uint8Array(n); crypto.getRandomValues(a); return Array.from(a,b=>"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"[b%66]).join(""); }
+  async function sha256(s){ return new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s))); }
+  const b64u=b=>btoa(String.fromCharCode(...b)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+
+  async function login(){
+    const cid=($("clientId").value||clientId()).trim();
+    if(!cid){ msg("Vul eerst het Client ID in.","err"); return; }
+    setL("mhla.cid",cid);
+    const verifier=rand(96); setL("mhla.verifier",verifier);
+    const p=new URLSearchParams({client_id:cid,response_type:"code",redirect_uri:REDIRECT,scope:SCOPES,
+      code_challenge_method:"S256",code_challenge:b64u(await sha256(verifier))});
+    location.href="https://accounts.spotify.com/authorize?"+p;
+  }
+  async function tokenRequest(params){
+    const r=await fetch("https://accounts.spotify.com/api/token",{method:"POST",
+      headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams(params)});
+    if(!r.ok) throw new Error("token "+r.status);
+    const j=await r.json();
+    setL("mhla.access",j.access_token); setL("mhla.exp",String(Date.now()+j.expires_in*1000));
+    if(j.refresh_token) setL("mhla.refresh",j.refresh_token);
+    return j.access_token;
+  }
+  async function getToken(){
+    if(Date.now()<+getL("mhla.exp","0")-60000) return getL("mhla.access","");
+    const rt=getL("mhla.refresh","");
+    if(!rt) throw new Error("niet ingelogd");
+    return tokenRequest({grant_type:"refresh_token",refresh_token:rt,client_id:clientId()});
+  }
+  function logout(){ ["access","exp","refresh","verifier"].forEach(k=>delL("mhla."+k)); location.href=REDIRECT; }
+  async function handleReturn(){
+    const q=new URLSearchParams(location.search);
+    if(q.get("error")){ history.replaceState(null,"",REDIRECT); msg("Inloggen is niet gelukt: "+esc(q.get("error")),"err"); return; }
+    const code=q.get("code"); if(!code) return;
+    history.replaceState(null,"",REDIRECT);
+    try{ await tokenRequest({grant_type:"authorization_code",code,redirect_uri:REDIRECT,client_id:clientId(),code_verifier:getL("mhla.verifier","")}); }
+    catch(e){ msg("Inloggen is niet gelukt. Controleer het Client ID en of de Redirect URI exact klopt.","err"); }
+  }
+
+  async function sp(path,opts){
+    opts=opts||{};
+    const tok=await getToken();
+    const r=await fetch(path.startsWith("http")?path:"https://api.spotify.com/v1"+path,
+      Object.assign({},opts,{headers:Object.assign({Authorization:"Bearer "+tok,"Content-Type":"application/json"},opts.headers||{})}));
+    if(r.status===429){ await sleep(2500); return sp(path,opts); }
+    return r;
+  }
+
+  /* ---------- Afspeler (Spotify Web Playback SDK) ---------- */
+  let player=null, deviceId=null, activated=false, watch=null;
+  function initPlayer(){
+    if(player||window.__sdkLoading) return; window.__sdkLoading=true;
+    window.onSpotifyWebPlaybackSDKReady=()=>{
+      player=new Spotify.Player({name:"Finish the lyrics",getOAuthToken:cb=>getToken().then(cb),volume:0.8});
+      player.addListener("ready",({device_id})=>{ deviceId=device_id; updateButtons(); });
+      player.addListener("not_ready",()=>{ deviceId=null; updateButtons(); });
+      player.addListener("account_error",()=>msg("Afspelen in de browser kan alleen met <b>Spotify Premium</b>.","err"));
+      player.addListener("authentication_error",()=>msg("Spotify-login is verlopen. Log opnieuw in.","err"));
+      player.addListener("initialization_error",()=>msg("Deze browser ondersteunt de Spotify-speler niet. Gebruik Chrome, Edge of Firefox op een computer.","err"));
+      player.addListener("player_state_changed",s=>document.body.classList.toggle("playing",!!s&&!s.paused));
+      player.connect();
+    };
+    const s=document.createElement("script"); s.src="https://sdk.scdn.co/spotify-player.js"; document.head.appendChild(s);
+  }
+  async function playFrom(uri,posMs){
+    if(!player||!deviceId) throw new Error("speler niet klaar");
+    if(!activated){ try{ player.activateElement(); }catch(e){} activated=true; }
+    clearInterval(watch);
+    try{ await player.pause(); }catch(e){}
+    const body=JSON.stringify({uris:[uri],position_ms:Math.max(0,Math.round(posMs))});
+    let r=await sp("/me/player/play?device_id="+deviceId,{method:"PUT",body});
+    if(r.status===404){ await sp("/me/player",{method:"PUT",body:JSON.stringify({device_ids:[deviceId],play:false})}); await sleep(600);
+      r=await sp("/me/player/play?device_id="+deviceId,{method:"PUT",body}); }
+    if(!r.ok) throw new Error("play "+r.status);
+  }
+  function armStop(startMs,stopMs,onStop){
+    clearInterval(watch);
+    const armedAt=performance.now();
+    watch=setInterval(async()=>{
+      if(performance.now()-armedAt<700) return;
+      const s=await player.getCurrentState();
+      if(!s||s.paused||s.position<startMs-500) return;
+      if(s.position>=stopMs-STOP_MARGIN_MS){ clearInterval(watch); await player.pause(); onStop(); }
+    },60);
+  }
+
+  /* ---------- Playlist en teksten ---------- */
+  const mapTrack=it=>{
+    if(!it||it.is_local||(it.type&&it.type!=="track")||!it.uri) return null;
+    return {id:it.id,uri:it.uri,name:it.name,artists:(it.artists||[]).map(a=>a.name),album:it.album&&it.album.name,
+            durMs:it.duration_ms,img:it.album&&it.album.images&&(it.album.images[1]||it.album.images[0])&&(it.album.images[1]||it.album.images[0]).url};
+  };
+  async function loadPlaylist(id){
+    const out=[]; let url="/playlists/"+id+"/items?limit=50", triedOld=false;
+    while(url){
+      let r=await sp(url);
+      if(!r.ok && !triedOld && out.length===0 && (r.status===404||r.status===400)){ triedOld=true; url="/playlists/"+id+"/tracks?limit=50"; r=await sp(url); }
+      if(!r.ok){ const e=new Error("playlist "+r.status); e.status=r.status; throw e; }
+      const j=await r.json();
+      (j.items||[]).forEach(x=>{ const t=mapTrack(x.item||x.track); if(t) out.push(t); });
+      url=j.next||null;
+    }
+    return out;
+  }
+  async function searchTracks(lines){
+    const out=[];
+    for(const raw of lines){
+      const m=raw.split(/\s+[-–]\s+/); const title=m[0].trim(), artist=(m[1]||"").trim(); if(!title) continue;
+      const qs=[ artist?`track:"${title}" artist:"${artist}"`:`track:"${title}"`, (title+" "+artist).trim() ];
+      for(const q of qs){
+        const r=await sp("/search?type=track&limit=1&q="+encodeURIComponent(q)); if(!r.ok) continue;
+        const j=await r.json(); const t=mapTrack(j.tracks&&j.tracks.items&&j.tracks.items[0]); if(t){ out.push(t); break; }
+      }
+      progress(out.length,lines.length,"Zoeken in Spotify…");
+    }
+    return out;
+  }
+  async function fetchLyrics(t){
+    const dur=Math.round(t.durMs/1000);
+    try{
+      const q=new URLSearchParams({track_name:t.name,artist_name:t.artists[0]||"",album_name:t.album||"",duration:dur});
+      const r=await fetch("https://lrclib.net/api/get?"+q);
+      if(r.ok){ const j=await r.json(); if(j.syncedLyrics&&!j.instrumental) return j.syncedLyrics; }
+    }catch(e){}
+    try{
+      const q=new URLSearchParams({track_name:cleanTitle(t.name),artist_name:t.artists[0]||""});
+      const r=await fetch("https://lrclib.net/api/search?"+q);
+      if(r.ok){
+        const ok=(await r.json()).filter(x=>x.syncedLyrics&&!x.instrumental&&Math.abs(x.duration*1000-t.durMs)<=6000);
+        ok.sort((a,b)=>Math.abs(a.duration*1000-t.durMs)-Math.abs(b.duration*1000-t.durMs));
+        if(ok[0]) return ok[0].syncedLyrics;
+      }
+    }catch(e){}
+    return null;
+  }
+  function progress(done,total,title){
+    if(title) $("loadTitle").textContent=title;
+    $("loadBar").style.width=(total?Math.round(done/total*100):0)+"%";
+    $("loadText").textContent=done+" van "+total;
+  }
+  const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+  const settings=()=>({lead:+$("setLead").value*1000, lines:+$("setLines").value});
+
+  async function buildDeck(tracks){
+    screen("Loading"); progress(0,tracks.length,"Teksten zoeken…");
+    const queue=shuffle(tracks.slice()), ok=[], skipped=[]; let done=0;
+    async function worker(){
+      while(queue.length){
+        const t=queue.shift();
+        t.lines=parseLRC(await fetchLyrics(t));
+        const good=t.lines.length&&pickStop(t.lines,t.durMs,settings().lines,settings().lead);
+        (good?ok:skipped).push(t); done++; progress(done,tracks.length);
+      }
+    }
+    await Promise.all([worker(),worker(),worker(),worker()]);
+    if(!ok.length){ screen("Playlist"); msg("Bij geen enkel liedje is een tijdgesynchroniseerde tekst gevonden. Probeer een playlist met meer bekende (Engelstalige) hits.","err"); return; }
+    deck=shuffle(ok); $("skipped").innerHTML=skipped.length
+      ? "Overgeslagen, geen geschikte tekst gevonden: "+skipped.map(t=>esc(t.name+" – "+(t.artists[0]||""))).join(", ") : "";
+    msg(""); screen("Game"); enter(0);
+  }
+
+  /* ---------- Spel ---------- */
+  let deck=[], i=0, cur=null;
+  function updateButtons(){
+    const ready=!!deviceId&&!!cur;
+    $("playBtn").disabled=!ready; $("contBtn").disabled=!ready||!cur.stop; $("pauseBtn").disabled=!ready;
+    if(!deviceId&&$("screenGame").offsetParent) $("status").textContent="Spotify-speler wordt gestart…";
+  }
+  function enter(n){
+    clearInterval(watch); if(player) player.pause().catch(()=>{});
+    for(let k=0;k<deck.length;k++){
+      i=((n+k)%deck.length+deck.length)%deck.length; const t=deck[i];
+      const stop=pickStop(t.lines,t.durMs,settings().lines,settings().lead);
+      if(stop){ cur={track:t,stop,revealed:false}; break; }
+    }
+    $("counter").textContent="Liedje "+(i+1)+" van "+deck.length;
+    $("whoami").classList.add("hidden"); $("answer").classList.add("hidden");
+    $("revealBtn").textContent="👀 Toon songtekst";
+    $("status").textContent="Druk op ▶ om te beginnen"; updateButtons();
+  }
+  async function playSnippet(){
+    const {track,stop}=cur;
+    $("status").textContent="🎧 Luister goed…";
+    try{
+      await playFrom(track.uri,stop.startMs);
+      armStop(stop.startMs,stop.stopMs,()=>{ $("status").textContent="⏸ STOP! Maak de tekst af 🎤"; });
+    }catch(e){ msg("Afspelen lukt niet ("+esc(e.message)+"). Is Spotify Premium actief en de pagina geopend in Chrome, Edge of Firefox?","err"); }
+  }
+  function reveal(){
+    cur.revealed=!cur.revealed;
+    if(cur.revealed){
+      $("answer").innerHTML='<div class="top">…'+esc(cur.stop.context)+'</div><div class="bot">'+cur.stop.missing.map(esc).join("<br>")+'</div>';
+      $("answer").classList.remove("hidden");
+      $("cover").src=cur.track.img||""; $("cover").classList.toggle("hidden",!cur.track.img);
+      $("songTitle").textContent=cur.track.name; $("songArtist").textContent=cur.track.artists.join(", ");
+      $("whoami").classList.remove("hidden"); $("revealBtn").textContent="🙈 Verberg songtekst";
+    } else { $("answer").classList.add("hidden"); $("whoami").classList.add("hidden"); $("revealBtn").textContent="👀 Toon songtekst"; }
+  }
+  $("playBtn").onclick=playSnippet;
+  $("pauseBtn").onclick=async()=>{ clearInterval(watch); if(player){ const s=await player.getCurrentState(); if(s&&s.paused) await player.resume(); else await player.pause(); } };
+  $("revealBtn").onclick=reveal;
+  $("nextBtn").onclick=()=>enter(i+1);
+  $("prevBtn").onclick=()=>enter(i-1);
+  $("rerollBtn").onclick=()=>enter(i);
+  $("contBtn").onclick=async()=>{ try{ await playFrom(cur.track.uri,cur.stop.stopMs-200); $("status").textContent="🎶 Zo ging het verder…"; }catch(e){ msg("Afspelen lukt niet.","err"); } };
+  $("vol").oninput=e=>{ if(player) player.setVolume(e.target.value/100); };
+  document.addEventListener("keydown",e=>{
+    if(!$("screenGame").offsetParent||["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)) return;
+    if(e.key===" "){ e.preventDefault(); if(!$("playBtn").disabled) playSnippet(); }
+    if(e.key==="Enter") reveal();
+    if(e.key==="ArrowRight") enter(i+1);
+    if(e.key==="ArrowLeft") enter(i-1);
+  });
+
+  /* ---------- Scorebord ---------- */
+  let players=[]; try{ players=JSON.parse(getL("mhla.players","[]"))||[]; }catch(e){}
+  const savePl=()=>setL("mhla.players",JSON.stringify(players));
+  function renderPlayers(){
+    $("players").innerHTML=players.map((p,k)=>'<div class="player"><b>'+esc(p.name)+'</b><div class="score">'+p.score+'</div><div class="pb">'+
+      '<button class="btn mint small" data-a="p" data-i="'+k+'">+1</button><button class="btn alt small" data-a="m" data-i="'+k+'">−1</button>'+
+      '<button class="btn alt small" data-a="d" data-i="'+k+'">✕</button></div></div>').join("")||'<p class="hint">Voeg deelnemers of teams toe om punten bij te houden.</p>';
+  }
+  $("players").onclick=e=>{ const b=e.target.closest("button"); if(!b) return; const k=+b.dataset.i,a=b.dataset.a;
+    if(a==="p") players[k].score++; if(a==="m") players[k].score=Math.max(0,players[k].score-1); if(a==="d") players.splice(k,1);
+    savePl(); renderPlayers(); };
+  $("addPlayer").onclick=()=>{ const n=$("newPlayer").value.trim(); if(!n) return; players.push({name:n,score:0}); $("newPlayer").value=""; savePl(); renderPlayers(); };
+  $("newPlayer").addEventListener("keydown",e=>{ if(e.key==="Enter") $("addPlayer").click(); });
+  $("resetScores").onclick=()=>{ players.forEach(p=>p.score=0); savePl(); renderPlayers(); };
+
+  /* ---------- Knoppen en opstart ---------- */
+  $("loginBtn").onclick=login;
+  $("logoutBtn").onclick=logout;
+  $("backBtn").onclick=()=>{ clearInterval(watch); if(player) player.pause().catch(()=>{}); msg(""); screen("Playlist"); };
+  $("loadBtn").onclick=async()=>{
+    const v=$("playlistUrl").value.trim(); const m=v.match(/playlist[\/:]([A-Za-z0-9]+)/)||v.match(/^([A-Za-z0-9]{22})$/);
+    if(!m){ msg("Dat lijkt geen Spotify-playlistlink. Kopieer de link via Delen → Link naar playlist kopiëren.","err"); return; }
+    setL("mhla.playlist",v); msg(""); screen("Loading"); progress(0,1,"Playlist ophalen…");
+    try{ const tracks=await loadPlaylist(m[1]);
+      if(!tracks.length){ screen("Playlist"); msg("Er staan geen afspeelbare nummers in deze playlist.","err"); return; }
+      await buildDeck(tracks);
+    }catch(e){
+      screen("Playlist");
+      if(e.status===401) msg("Je login is verlopen. Log opnieuw in.","err");
+      else if(e.status===403||e.status===404) msg("Spotify geeft de nummers van deze playlist niet vrij. In dit type app lukt dat alleen voor playlists die <b>van jou zijn of waar jij medewerker van bent</b>. Maak een eigen kopie (alle nummers selecteren → toevoegen aan nieuwe playlist) of plak hieronder de liedjes.","err");
+      else msg("Playlist laden mislukt ("+esc(e.message)+").","err");
+    }
+  };
+  $("pasteBtn").onclick=async()=>{
+    const lines=$("pasteList").value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    if(!lines.length){ msg("Plak eerst een paar liedjes.","err"); return; }
+    msg(""); screen("Loading"); progress(0,lines.length,"Zoeken in Spotify…");
+    try{ const tracks=await searchTracks(lines);
+      if(!tracks.length){ screen("Playlist"); msg("Geen van deze liedjes is gevonden.","err"); return; }
+      await buildDeck(tracks);
+    }catch(e){ screen("Playlist"); msg("Zoeken mislukt ("+esc(e.message)+").","err"); }
+  };
+
+  async function start(){
+    $("redirectUri").textContent=REDIRECT;
+    $("clientId").value=clientId();
+    if(DEFAULT_CLIENT_ID) $("clientId").parentElement.classList.add("hidden");
+    $("playlistUrl").value=getL("mhla.playlist","");
+    renderPlayers();
+    await handleReturn();
+    if(getL("mhla.refresh","")||getL("mhla.access","")){ screen("Playlist"); initPlayer(); }
+    else screen("Setup");
+  }
+  start();
+})();
+</script>
+</body>
+</html>
