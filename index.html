@@ -543,7 +543,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   const sameArtist=(artists,name)=>{ const w=words(name); return artists.some(a=>{ const n=norm(a); return n&&(norm(name).includes(n)||n.includes(norm(name))||words(a).some(x=>w.includes(x))); }); };
   async function fetchLyrics(t){
     const dur=Math.round(t.durMs/1000), artist=t.artists[0]||"";
-    const title=cleanTitle(t.name)||t.name;
+    const title=cleanTitle(t.name)||t.name; t.why="none";
     const names=[...new Set([t.name,title])];
     // 1. Exacte treffer (eerst met, dan zonder albumnaam; de albumnaam verschilt vaak per uitgave)
     for(const n of names) for(const alb of (t.album?[t.album,""]:[""])){
@@ -560,6 +560,11 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
       const good=[...found.values()].filter(x=>x.syncedLyrics&&!x.instrumental&&sameTitle(x.trackName||"",title)&&sameArtist(t.artists,x.artistName||"")&&Math.abs(x.duration*1000-t.durMs)<=10000);
       if(good.length){ good.sort((a,b)=>Math.abs(a.duration*1000-t.durMs)-Math.abs(b.duration*1000-t.durMs)); return good[0].syncedLyrics; }
     }
+    // Niet gelukt: bepaal waarom, zodat de spelleider ziet wat er aan de hand is
+    const m=[...found.values()].filter(x=>sameTitle(x.trackName||"",title)&&sameArtist(t.artists,x.artistName||""));
+    t.why = m.some(x=>x.syncedLyrics&&!x.instrumental) ? "duration"
+          : m.some(x=>!x.instrumental&&x.plainLyrics) ? "plain"
+          : m.some(x=>x.instrumental) ? "instrumental" : "none";
     return null;
   }
   function progress(done,total,title){
@@ -571,18 +576,22 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   const settings=()=>({lead:+$("setLead").value*1000, lines:+$("setLines").value});
 
   let skippedTracks=[];
+  const WHY={ none:"Geen tekst gevonden", plain:"Wel een tekst, maar zonder tijdstempels (dan weet de app niet waar hij moet stoppen)",
+              duration:"Tekst van een andere uitvoering (lengte wijkt meer dan 10 seconden af)", short:"Tekst te kort om een stopmoment te kiezen", instrumental:"Instrumentaal" };
   function showSkipped(){
-    $("skipped").innerHTML=skippedTracks.length
-      ? "Overgeslagen, geen geschikte tekst gevonden ("+skippedTracks.length+" van "+(deck.length+skippedTracks.length)+"): "+skippedTracks.map(t=>esc(t.name+" – "+(t.artists[0]||""))).join(", ")+
-        ' <button class="btn alt small" id="retrySkipped" style="margin-top:6px">🔄 Opnieuw proberen</button>' : "";
-    const b=$("retrySkipped"); if(b) b.onclick=retrySkipped;
+    if(!skippedTracks.length){ $("skipped").innerHTML=""; return; }
+    const groups={}; skippedTracks.forEach(t=>{ (groups[t.why||"none"]=groups[t.why||"none"]||[]).push(esc(t.name+" – "+(t.artists[0]||""))); });
+    $("skipped").innerHTML="<b>Overgeslagen: "+skippedTracks.length+" van "+(deck.length+skippedTracks.length)+" liedjes.</b>"+
+      Object.keys(WHY).filter(k=>groups[k]).map(k=>'<div style="margin-top:4px"><i>'+WHY[k]+" ("+groups[k].length+"):</i> "+groups[k].join(", ")+"</div>").join("")+
+      '<button class="btn alt small" id="retrySkipped" style="margin-top:8px">🔄 Opnieuw proberen</button>';
+    $("retrySkipped").onclick=retrySkipped;
   }
   async function retrySkipped(){
     const b=$("retrySkipped"); b.disabled=true; b.textContent="Zoeken…";
     const left=[]; let added=0;
     for(const t of skippedTracks){
       t.lines=parseLRC(await fetchLyrics(t));
-      if(t.lines.length&&pickStop(t.lines,t.durMs,settings().lines,settings().lead)){ deck.push(t); added++; } else left.push(t);
+      if(t.lines.length&&pickStop(t.lines,t.durMs,settings().lines,settings().lead)){ deck.push(t); added++; } else { if(t.lines.length) t.why="short"; left.push(t); }
     }
     skippedTracks=left; showSkipped(); updateCounter();
     msg(added?added+" liedje"+(added>1?"s":"")+" erbij gevonden.":"Er is nog niets nieuws gevonden.", added?"":"err");
@@ -596,6 +605,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
         const t=queue.shift();
         t.lines=parseLRC(await fetchLyrics(t));
         const good=t.lines.length&&pickStop(t.lines,t.durMs,settings().lines,settings().lead);
+        if(!good&&t.lines.length) t.why="short";
         (good?ok:skipped).push(t); done++; progress(done,tracks.length);
       }
     }
