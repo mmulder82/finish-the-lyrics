@@ -525,22 +525,41 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     }
     return out;
   }
+  /* Eén verzoek aan LRCLIB, met time-out en nieuwe pogingen bij overbelasting of haperend netwerk */
+  async function lr(path,params){
+    for(let i=0;i<3;i++){
+      const ac=new AbortController(), to=setTimeout(()=>ac.abort(),12000);
+      try{
+        const r=await fetch("https://lrclib.net/api/"+path+"?"+new URLSearchParams(params),{signal:ac.signal}); clearTimeout(to);
+        if(r.ok) return await r.json();
+        if(r.status!==429&&r.status<500) return null;        // 404 e.d.: dit bestaat gewoon niet
+      }catch(e){ clearTimeout(to); }
+      await sleep(900*(i+1)+Math.random()*500);
+    }
+    return null;
+  }
+  const words=s=>norm(s).split(" ").filter(w=>w.length>=3);
+  const sameTitle=(a,b)=>{ a=norm(a); b=norm(b); return !!a&&!!b&&(a===b||a.includes(b)||b.includes(a)); };
+  const sameArtist=(artists,name)=>{ const w=words(name); return artists.some(a=>{ const n=norm(a); return n&&(norm(name).includes(n)||n.includes(norm(name))||words(a).some(x=>w.includes(x))); }); };
   async function fetchLyrics(t){
-    const dur=Math.round(t.durMs/1000);
-    try{
-      const q=new URLSearchParams({track_name:t.name,artist_name:t.artists[0]||"",album_name:t.album||"",duration:dur});
-      const r=await fetch("https://lrclib.net/api/get?"+q);
-      if(r.ok){ const j=await r.json(); if(j.syncedLyrics&&!j.instrumental) return j.syncedLyrics; }
-    }catch(e){}
-    try{
-      const q=new URLSearchParams({track_name:cleanTitle(t.name),artist_name:t.artists[0]||""});
-      const r=await fetch("https://lrclib.net/api/search?"+q);
-      if(r.ok){
-        const ok=(await r.json()).filter(x=>x.syncedLyrics&&!x.instrumental&&Math.abs(x.duration*1000-t.durMs)<=6000);
-        ok.sort((a,b)=>Math.abs(a.duration*1000-t.durMs)-Math.abs(b.duration*1000-t.durMs));
-        if(ok[0]) return ok[0].syncedLyrics;
-      }
-    }catch(e){}
+    const dur=Math.round(t.durMs/1000), artist=t.artists[0]||"";
+    const title=cleanTitle(t.name)||t.name;
+    const names=[...new Set([t.name,title])];
+    // 1. Exacte treffer (eerst met, dan zonder albumnaam; de albumnaam verschilt vaak per uitgave)
+    for(const n of names) for(const alb of (t.album?[t.album,""]:[""])){
+      const p={track_name:n,artist_name:artist,duration:dur}; if(alb) p.album_name=alb;
+      const j=await lr("get",p); if(j&&j.syncedLyrics&&!j.instrumental) return j.syncedLyrics;
+    }
+    // 2. Zoeken en de beste kiezen: titel en artiest moeten kloppen, de duur mag maximaal 10 seconden afwijken
+    const found=new Map();
+    const queries=[{track_name:title,artist_name:artist},{q:title+" "+artist},{q:title}];
+    if(t.artists[1]) queries.splice(2,0,{q:title+" "+t.artists[1]});
+    for(const q of queries){
+      const list=await lr("search",q);
+      (Array.isArray(list)?list:[]).forEach(x=>found.set(x.id,x));
+      const good=[...found.values()].filter(x=>x.syncedLyrics&&!x.instrumental&&sameTitle(x.trackName||"",title)&&sameArtist(t.artists,x.artistName||"")&&Math.abs(x.duration*1000-t.durMs)<=10000);
+      if(good.length){ good.sort((a,b)=>Math.abs(a.duration*1000-t.durMs)-Math.abs(b.duration*1000-t.durMs)); return good[0].syncedLyrics; }
+    }
     return null;
   }
   function progress(done,total,title){
@@ -551,6 +570,24 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   const shuffle=a=>{ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
   const settings=()=>({lead:+$("setLead").value*1000, lines:+$("setLines").value});
 
+  let skippedTracks=[];
+  function showSkipped(){
+    $("skipped").innerHTML=skippedTracks.length
+      ? "Overgeslagen, geen geschikte tekst gevonden ("+skippedTracks.length+" van "+(deck.length+skippedTracks.length)+"): "+skippedTracks.map(t=>esc(t.name+" – "+(t.artists[0]||""))).join(", ")+
+        ' <button class="btn alt small" id="retrySkipped" style="margin-top:6px">🔄 Opnieuw proberen</button>' : "";
+    const b=$("retrySkipped"); if(b) b.onclick=retrySkipped;
+  }
+  async function retrySkipped(){
+    const b=$("retrySkipped"); b.disabled=true; b.textContent="Zoeken…";
+    const left=[]; let added=0;
+    for(const t of skippedTracks){
+      t.lines=parseLRC(await fetchLyrics(t));
+      if(t.lines.length&&pickStop(t.lines,t.durMs,settings().lines,settings().lead)){ deck.push(t); added++; } else left.push(t);
+    }
+    skippedTracks=left; showSkipped(); updateCounter();
+    msg(added?added+" liedje"+(added>1?"s":"")+" erbij gevonden.":"Er is nog niets nieuws gevonden.", added?"":"err");
+  }
+  const updateCounter=()=>{ $("counter").textContent="Liedje "+(i+1)+" van "+deck.length; };
   async function buildDeck(tracks){
     screen("Loading"); progress(0,tracks.length,"Teksten zoeken…");
     const queue=shuffle(tracks.slice()), ok=[], skipped=[]; let done=0;
@@ -562,10 +599,9 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
         (good?ok:skipped).push(t); done++; progress(done,tracks.length);
       }
     }
-    await Promise.all([worker(),worker(),worker(),worker()]);
+    await Promise.all([worker(),worker(),worker()]);
     if(!ok.length){ screen("Playlist"); msg("Bij geen enkel liedje is een tijdgesynchroniseerde tekst gevonden. Probeer een playlist met meer bekende (Engelstalige) hits.","err"); return; }
-    deck=shuffle(ok); $("skipped").innerHTML=skipped.length
-      ? "Overgeslagen, geen geschikte tekst gevonden: "+skipped.map(t=>esc(t.name+" – "+(t.artists[0]||""))).join(", ") : "";
+    deck=shuffle(ok); skippedTracks=skipped; showSkipped();
     msg("");
     if($("setManual").checked) showPrep(); else { screen("Game"); enter(0); }
   }
