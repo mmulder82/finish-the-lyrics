@@ -78,6 +78,17 @@ Spotify laat een app alleen toe als iemand eenmalig een Spotify-app heeft aangem
 
 Een gebruiker moet nog steeds inloggen met een eigen Premium-account. Daar zit geen omweg voor: Spotify eist toestemming van elke gebruiker. Daarnaast staat een Spotify-app in de ontwikkelaarsmodus maximaal vijf gebruikers toe, en elk account moet door de beheerder worden toegevoegd onder **User management** in het dashboard. Voor onbeperkt gebruik door anderen heeft Spotify een aparte goedkeuring nodig (extended quota). Naar de voorwaarden daarvan heb ik niet kunnen vinden wat officieel geldt.
 
+### Liedjes zonder tijdstempels: zelf een stopmoment vastleggen (optioneel)
+
+Liedjes waarvoor LRCLIB geen tijdgesynchroniseerde tekst heeft, worden onder het spel getoond met de reden. Wil je ze toch gebruiken, kies dan **✍️ Zelf stopmoment vastleggen**. Dit hoeft niet; zonder deze stap werkt het spel zoals altijd.
+
+1. Kies het liedje. Er staat bij of er een tekst (zonder tijdstempels) is gevonden.
+2. Zet de beginstand (bijvoorbeeld `0:30`) en kies **▶ Speel vanaf hier**. Druk op **⏸ Hier stoppen** zodra de laatste regel vóór de ontbrekende tekst is afgelopen. Met **− 0,5 s**, **+ 0,5 s** en **🎧 Test** stel je het moment precies af.
+3. Klik in de lijst op de eerste regel die na de stop gezongen wordt. De volgende regels (zoveel als je bij "Hoeveel regels moet je afmaken?" hebt ingesteld) worden automatisch meegenomen. Is er geen tekst gevonden, typ de regels dan zelf in.
+4. Kies **✅ Toevoegen aan het spel**. Het liedje doet vanaf nu mee.
+
+Dit scherm toont songteksten, dus doe dit voordat de deelnemers meekijken. Zelf vastgelegde momenten gelden voor deze ronde en worden niet bewaard. Bij zulke liedjes is **🎲 Ander moment** uitgeschakeld. Het stopmoment is zo nauwkeurig als jouw druk op de knop; de app trekt er een kwart seconde reactietijd af.
+
 ## Schermen
 
 | | |
@@ -88,6 +99,8 @@ Een gebruiker moet nog steeds inloggen met een eigen Premium-account. Daar zit g
 | **3. Het liedje speelt** | **4. De songtekst, titel en artiest verschijnen** |
 | ![Stopmomenten kiezen](06-stopmomenten.png) | ![Afspelen op een Spotify-apparaat](07-afspelen-op.png) |
 | **Optioneel: zelf de stopmomenten kiezen** | **Optioneel: afspelen op een telefoon, Apple TV of luidspreker** |
+| ![Zelf een stopmoment vastleggen](08-zelf-vastleggen.png) | |
+| **Optioneel: een liedje zonder tijdstempels zelf vastleggen** | |
 
 ## Installeren
 
@@ -122,7 +135,7 @@ Alleen de spelleider hoeft in te loggen. De deelnemers kijken en luisteren mee.
 - **Computer met Chrome, Edge of Firefox** voor afspelen in de browser. Op een telefoon of tablet kies je **Een Spotify-apparaat** (zie hierboven).
 - **Maximaal 5 gebruikers per Spotify-app** in de ontwikkelaarsmodus.
 - **De playlist moet van jou zijn, of een gedeelde playlist waar jij medewerker van bent.** Spotify geeft de nummers van andermans playlist niet vrij. Maak anders een eigen kopie (alle nummers selecteren en toevoegen aan een nieuwe playlist), of plak onder **Lukt de playlist niet?** de liedjes als `Titel - Artiest`.
-- **Niet elk liedje heeft een geschikte tekst.** De teksten komen van [LRCLIB](https://lrclib.net), een community-database met tijdstempels per regel. De app probeert per liedje meerdere manieren: eerst een exacte treffer (met en zonder albumnaam), daarna zoeken op titel en artiest. De uitvoering mag in lengte maximaal 10 seconden afwijken van die op Spotify, zodat de tijdstempels kloppen. Als LRCLIB even overbelast is, probeert de app het opnieuw. Liedjes zonder zulke tekst worden overgeslagen en onder het spel getoond, met een knop **🔄 Opnieuw proberen**. Nederlandstalige, heel nieuwe en weinig bekende nummers vallen vaker af.
+- **Niet elk liedje heeft een geschikte tekst.** De teksten komen van [LRCLIB](https://lrclib.net), een community-database met tijdstempels per regel. De app probeert per liedje meerdere manieren: eerst een exacte treffer (met en zonder albumnaam), daarna zoeken op titel en artiest. De uitvoering mag in lengte maximaal 10 seconden afwijken van die op Spotify, zodat de tijdstempels kloppen. Als LRCLIB even overbelast is, probeert de app het opnieuw. Liedjes zonder zulke tekst worden overgeslagen en onder het spel getoond, met de reden en een knop **🔄 Opnieuw proberen**. Je kunt zulke liedjes ook zelf vastleggen (zie hierboven). Nederlandstalige, heel nieuwe en weinig bekende nummers vallen vaker af.
 - **De stop is niet tot op de milliseconde.** De app pauzeert iets eerder, omdat pauzeren even duurt (via een Spotify-apparaat ongeveer een halve seconde). Soms klopt de tijdstempel van een andere versie van het nummer niet helemaal. Kies dan **Ander moment** of ga naar het volgende liedje.
 
 ## Problemen oplossen

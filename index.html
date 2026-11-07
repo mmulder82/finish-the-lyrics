@@ -52,6 +52,9 @@
   textarea{min-height:110px; resize:vertical}
   input:focus,textarea:focus,select:focus{outline:none; border-color:var(--pink)}
   input[type=range]{accent-color:var(--pink); border:0; background:transparent}
+  .tagLines{max-height:240px; overflow:auto; border:2px solid var(--line); border-radius:12px; padding:6px; margin:6px 0}
+  .tagLines button{display:block; width:100%; text-align:left; background:none; border:0; color:inherit; font:inherit; font-size:15px; padding:5px 9px; border-radius:8px; cursor:pointer}
+  .tagLines button:hover{background:#23232d} .tagLines button.sel{background:var(--pink); color:#15151a; font-weight:700}
   .hint{font-size:14px; color:var(--muted); margin:4px 0}
   .hint b{color:#fff}
   .msg{border-radius:16px; padding:12px 16px; margin:12px 0; background:var(--yellow); color:#15151a; font-size:15px; font-weight:600}
@@ -159,6 +162,35 @@
   </section>
 
   <!-- 3. Laden -->
+  <!-- Zelf een stopmoment vastleggen (liedjes zonder tijdstempels) -->
+  <section id="screenTag" class="card hidden">
+    <h2 style="margin-top:0">✍️ Zelf een stopmoment vastleggen</h2>
+    <p class="hint">Voor liedjes zonder tijdgesynchroniseerde tekst. Dit scherm toont songteksten, dus doe dit voordat de deelnemers meekijken.</p>
+    <label for="tagSel">Liedje</label><select id="tagSel"></select>
+    <label>1. Leg het stopmoment vast</label>
+    <p class="hint">Speel het liedje (begin een stukje vóór het gedeelte dat je wilt gebruiken) en druk op <b>Hier stoppen</b> direct nadat de laatste regel vóór de ontbrekende tekst is afgelopen.</p>
+    <div class="controls" style="justify-content:flex-start">
+      <input id="tagStart" value="0:30" style="width:90px" aria-label="Beginnen op (minuten:seconden)">
+      <button class="btn alt small" id="tagPlay">▶ Speel vanaf hier</button>
+      <button class="btn yellow small" id="tagStopBtn">⏸ Hier stoppen</button>
+    </div>
+    <div class="controls" style="justify-content:flex-start; margin-top:6px">
+      <span id="tagTime" class="hint" style="margin-right:6px">Nog geen stopmoment vastgelegd</span>
+      <button class="btn alt small" id="tagMinus">− 0,5 s</button>
+      <button class="btn alt small" id="tagPlus">+ 0,5 s</button>
+      <button class="btn alt small" id="tagTest">🎧 Test</button>
+    </div>
+    <label>2. Welke tekst wordt er daarna gezongen?</label>
+    <div id="tagLinesWrap"><p class="hint">Klik op de eerste regel die na de stop gezongen wordt. De volgende regels worden automatisch meegenomen.</p><div class="tagLines" id="tagLines"></div></div>
+    <p class="hint" id="tagNoText" style="display:none">Er is geen tekst gevonden. Typ de ontbrekende regels zelf.</p>
+    <label for="tagCtx">Laatste regel vóór de stop (optioneel)</label><input id="tagCtx" autocomplete="off">
+    <label for="tagText">Ontbrekende tekst (één regel per regel)</label><textarea id="tagText"></textarea>
+    <div class="controls" style="justify-content:flex-start">
+      <button class="btn mint" id="tagSave">✅ Toevoegen aan het spel</button>
+      <button class="btn alt" id="tagBack">Klaar, terug</button>
+    </div>
+  </section>
+
   <section id="screenLoading" class="card hidden">
     <h2 style="margin-top:0" id="loadTitle">Bezig…</h2>
     <div class="bar"><div id="loadBar"></div></div>
@@ -302,7 +334,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   const delL=k=>{ try{ LS.removeItem(k) }catch(e){} };
 
   function msg(t,kind){ const m=$("msg"); if(!t){ m.classList.add("hidden"); return; } m.className="msg "+(kind||""); m.innerHTML=t; }
-  function screen(n){ ["Setup","Playlist","Loading","Prep","Game"].forEach(s=>$("screen"+s).classList.toggle("hidden",s!==n)); }
+  function screen(n){ ["Setup","Playlist","Loading","Prep","Game","Tag"].forEach(s=>$("screen"+s).classList.toggle("hidden",s!==n)); }
 
   /* ---------- Spotify-login (PKCE, geen geheim nodig) ---------- */
   const clientId=()=>DEFAULT_CLIENT_ID||getL("mhla.cid","");
@@ -543,7 +575,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   const sameArtist=(artists,name)=>{ const w=words(name); return artists.some(a=>{ const n=norm(a); return n&&(norm(name).includes(n)||n.includes(norm(name))||words(a).some(x=>w.includes(x))); }); };
   async function fetchLyrics(t){
     const dur=Math.round(t.durMs/1000), artist=t.artists[0]||"";
-    const title=cleanTitle(t.name)||t.name; t.why="none";
+    const title=cleanTitle(t.name)||t.name; t.why="none"; t.plain=null;
     const names=[...new Set([t.name,title])];
     // 1. Exacte treffer (eerst met, dan zonder albumnaam; de albumnaam verschilt vaak per uitgave)
     for(const n of names) for(const alb of (t.album?[t.album,""]:[""])){
@@ -565,6 +597,9 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     t.why = m.some(x=>x.syncedLyrics&&!x.instrumental) ? "duration"
           : m.some(x=>!x.instrumental&&x.plainLyrics) ? "plain"
           : m.some(x=>x.instrumental) ? "instrumental" : "none";
+    // Losse tekst (zonder tijdstempels) bewaren voor het zelf vastleggen van een stopmoment
+    const txt=m.filter(x=>!x.instrumental&&(x.plainLyrics||x.syncedLyrics)).sort((a,b)=>Math.abs(a.duration*1000-t.durMs)-Math.abs(b.duration*1000-t.durMs))[0];
+    if(txt){ const raw=txt.plainLyrics||String(txt.syncedLyrics).replace(/\[[^\]]*\]/g,""); t.plain=raw.split(/\r?\n/).map(x=>x.trim()).filter(Boolean); }
     return null;
   }
   function progress(done,total,title){
@@ -583,8 +618,9 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     const groups={}; skippedTracks.forEach(t=>{ (groups[t.why||"none"]=groups[t.why||"none"]||[]).push(esc(t.name+" – "+(t.artists[0]||""))); });
     $("skipped").innerHTML="<b>Overgeslagen: "+skippedTracks.length+" van "+(deck.length+skippedTracks.length)+" liedjes.</b>"+
       Object.keys(WHY).filter(k=>groups[k]).map(k=>'<div style="margin-top:4px"><i>'+WHY[k]+" ("+groups[k].length+"):</i> "+groups[k].join(", ")+"</div>").join("")+
-      '<button class="btn alt small" id="retrySkipped" style="margin-top:8px">🔄 Opnieuw proberen</button>';
-    $("retrySkipped").onclick=retrySkipped;
+      '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px"><button class="btn alt small" id="retrySkipped">🔄 Opnieuw proberen</button>'+
+      '<button class="btn alt small" id="tagOpen">✍️ Zelf stopmoment vastleggen</button></div>';
+    $("retrySkipped").onclick=retrySkipped; $("tagOpen").onclick=showTagScreen;
   }
   async function retrySkipped(){
     const b=$("retrySkipped"); b.disabled=true; b.textContent="Zoeken…";
@@ -610,7 +646,9 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
       }
     }
     await Promise.all([worker(),worker(),worker()]);
-    if(!ok.length){ screen("Playlist"); msg("Bij geen enkel liedje is een tijdgesynchroniseerde tekst gevonden. Probeer een playlist met meer bekende (Engelstalige) hits.","err"); return; }
+    if(!ok.length){
+      if(skipped.length){ deck=[]; skippedTracks=skipped; showSkipped(); msg("Bij geen enkel liedje is een tijdgesynchroniseerde tekst gevonden. Je kunt de stopmomenten zelf vastleggen.","err"); showTagScreen(); return; }
+      screen("Playlist"); msg("Er zijn geen liedjes gevonden.","err"); return; }
     deck=shuffle(ok); skippedTracks=skipped; showSkipped();
     msg("");
     if($("setManual").checked) showPrep(); else { screen("Game"); enter(0); }
@@ -644,6 +682,7 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
   function updateButtons(){
     const ready=canPlay()&&!!cur;
     $("playBtn").disabled=!ready; $("contBtn").disabled=!ready||!cur.stop; $("pauseBtn").disabled=!ready;
+    $("rerollBtn").disabled=!!(cur&&cur.track.fixed);          // zelf vastgelegd: geen willekeurig ander moment
     $("deviceNote").textContent=mode==="connect"&&connectName?"📡 Speelt op: "+connectName:"";
     if(!canPlay()&&$("screenGame").offsetParent) $("status").textContent=mode==="browser"?"Spotify-speler wordt gestart…":"Kies eerst een apparaat";
   }
@@ -651,8 +690,8 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     pauseQuiet();
     for(let k=0;k<deck.length;k++){
       i=((n+k)%deck.length+deck.length)%deck.length; const t=deck[i];
-      let stop=t.manualJ!=null?stopAt(t.lines,t.manualJ,settings().lines,settings().lead):null;
-      if(!stop) stop=pickStop(t.lines,t.durMs,settings().lines,settings().lead);
+      let stop=t.fixed?Object.assign({},t.fixed):(t.manualJ!=null?stopAt(t.lines,t.manualJ,settings().lines,settings().lead):null);
+      if(!stop&&t.lines) stop=pickStop(t.lines,t.durMs,settings().lines,settings().lead);
       if(stop){ cur={track:t,stop,revealed:false}; break; }
     }
     $("counter").textContent="Liedje "+(i+1)+" van "+deck.length;
@@ -693,6 +732,85 @@ function pickStop(lines,durationMs,nMissing,leadMs,rnd){
     if(e.key==="ArrowRight") enter(i+1);
     if(e.key==="ArrowLeft") enter(i-1);
   });
+
+  /* ---------- Zelf een stopmoment vastleggen (voor liedjes zonder tijdstempels) ---------- */
+  let tagT=null, tagStop=null;
+  const parseMS=v=>{ const m=String(v).trim().match(/^(\d+):(\d{1,2})$/); return m?(+m[1]*60+ +m[2])*1000:(v!==""&&isFinite(+v)?+v*1000:0); };
+  const fmtPrecise=ms=>{ const sec=Math.max(0,ms)/1000; return Math.floor(sec/60)+":"+(sec%60).toFixed(1).padStart(4,"0"); };
+  function showTagScreen(){
+    if(!skippedTracks.length){ leaveTag(); return; }
+    pauseQuiet(); screen("Tag");
+    $("tagSel").innerHTML=skippedTracks.map((t,k)=>'<option value="'+k+'">'+esc(t.name+" – "+(t.artists[0]||""))+(t.plain?" (tekst gevonden)":" (geen tekst)")+'</option>').join("");
+    selectTag(0);
+  }
+  function selectTag(k){
+    pauseQuiet(); tagT=skippedTracks[k]; tagStop=null; updateTagTime();
+    $("tagStart").value="0:30"; $("tagCtx").value=""; $("tagText").value="";
+    const has=!!(tagT&&tagT.plain&&tagT.plain.length);
+    $("tagLinesWrap").style.display=has?"":"none"; $("tagNoText").style.display=has?"none":"";
+    $("tagLines").innerHTML=has?tagT.plain.map((l,j)=>'<button data-k="'+j+'">'+esc(l)+'</button>').join(""):"";
+  }
+  function updateTagTime(){
+    $("tagTime").textContent=tagStop==null?"Nog geen stopmoment vastgelegd":"Stopmoment: "+fmtPrecise(tagStop);
+    ["tagMinus","tagPlus","tagTest"].forEach(id=>$(id).disabled=tagStop==null);
+  }
+  function leaveTag(){
+    pauseQuiet();
+    if(!deck.length){ screen("Playlist"); return; }
+    screen("Game"); enter(i);
+  }
+  /* Positie bepalen op het moment van drukken, daarna pauzeren */
+  async function capturePos(){
+    if(mode==="browser"){
+      if(!player) return null; const st=await player.getCurrentState(); if(!st||st.paused) return null;
+      const pos=st.position; await player.pause(); return pos;
+    }
+    const t0=performance.now(); const r=await sp("/me/player"); const t1=performance.now();
+    const j=r.status===200?await r.json():null; if(!j||!j.is_playing||j.progress_ms==null) return null;
+    const pos=j.progress_ms-(t1-t0)/2; await pauseNow(); return pos;
+  }
+  $("tagSel").onchange=()=>selectTag(+$("tagSel").value);
+  $("tagLines").onclick=e=>{
+    const b=e.target.closest("button"); if(!b||!tagT) return;
+    const k=+b.dataset.k, n=settings().lines, L=tagT.plain;
+    $("tagText").value=L.slice(k,k+n).join("\n"); $("tagCtx").value=k>0?L[k-1]:"";
+    [...$("tagLines").children].forEach((x,j)=>x.classList.toggle("sel",j>=k&&j<k+n));
+  };
+  $("tagPlay").onclick=async()=>{
+    if(!tagT||needDevice()) return;
+    try{ await playFrom(tagT.uri,parseMS($("tagStart").value)); msg(""); }
+    catch(e){ msg("Afspelen lukt niet ("+esc(e.message)+").","err"); }
+  };
+  $("tagStopBtn").onclick=async()=>{
+    if(!tagT) return;
+    try{
+      const pos=await capturePos();
+      if(pos==null){ msg("Het liedje speelt niet. Druk eerst op ▶ Speel vanaf hier.","err"); return; }
+      tagStop=Math.max(0,Math.round(pos-250));      // ongeveer een kwart seconde reactietijd
+      msg(""); updateTagTime();
+    }catch(e){ msg("Pauzeren lukt niet ("+esc(e.message)+").","err"); }
+  };
+  const nudge=d=>{ if(tagStop!=null){ tagStop=Math.max(0,tagStop+d); updateTagTime(); } };
+  $("tagMinus").onclick=()=>nudge(-500); $("tagPlus").onclick=()=>nudge(500);
+  $("tagTest").onclick=async()=>{
+    if(!tagT||tagStop==null||needDevice()) return;
+    const start=Math.max(0,tagStop-settings().lead);
+    try{ await playFrom(tagT.uri,start); armStop(start,tagStop,()=>{ $("tagTime").textContent="⏸ Gestopt op "+fmtPrecise(tagStop)+". Klopt het? Pas aan met − of + 0,5 s."; }); }
+    catch(e){ msg("Afspelen lukt niet ("+esc(e.message)+").","err"); }
+  };
+  $("tagSave").onclick=()=>{
+    if(!tagT) return;
+    const missing=$("tagText").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+    if(tagStop==null){ msg("Leg eerst het stopmoment vast: speel het liedje en druk op Hier stoppen.","err"); return; }
+    if(!missing.length){ msg("Vul de ontbrekende tekst in, of klik hem aan in de lijst.","err"); return; }
+    pauseQuiet();
+    const t=tagT;
+    t.fixed={startMs:Math.max(0,tagStop-settings().lead), stopMs:tagStop, resumeMs:tagStop, context:$("tagCtx").value.trim(), missing};
+    skippedTracks=skippedTracks.filter(x=>x!==t); deck.push(t); showSkipped();
+    msg("✅ "+esc(t.name)+" is toegevoegd aan het spel.","ok");
+    if(skippedTracks.length) showTagScreen(); else leaveTag();
+  };
+  $("tagBack").onclick=leaveTag;
 
   /* ---------- Scorebord ---------- */
   let players=[]; try{ players=JSON.parse(getL("mhla.players","[]"))||[]; }catch(e){}
